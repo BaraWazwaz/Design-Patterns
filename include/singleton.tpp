@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief Implementation of the @ref Singletone.hpp header for the @ref Singleton class.
+ */
+
 #include "singleton.hpp"
 
 namespace nitron
