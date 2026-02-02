@@ -10,9 +10,11 @@ public:
     }
     MyClass(const MyClass&) = delete;
     MyClass& operator=(const MyClass&) = delete;
+
     int& getData() { return data; }
     void setData(int _data) { data = _data; }
     operator int() { return data; }
+
 private:
     int data;
     MyClass()
@@ -26,7 +28,8 @@ private:
 int main() 
 {
     std::cout << "Hello World" << std::endl;
-    MyClass& x = nitron::Singleton<MyClass>::get();
+    typedef nitron::Singleton<MyClass> SingletonType;
+    MyClass& x = SingletonType::get();
     std::cout << "Singleton value: " << x.getData() << std::endl;
     x.setData(10);
     std::cout << "Singleton value: " << x.getData() << std::endl;
