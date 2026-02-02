@@ -9,7 +9,8 @@
 namespace nitron
 {
     /**
-     * @brief Singleton class wrapper
+     * @brief Singleton class wrapper.
+     * @tparam T Type to be wrapped as Singleton.
      * @details @ref Singleton Design Pattern allows only one instance of class, 
      * to limit and control access to the wrapped class's constructor.
      * 
@@ -19,25 +20,18 @@ namespace nitron
     class Singleton
     {
     public:
-        using ValueType = T;
-        using PointerType = std::unique_ptr<ValueType>;
-        Singleton() = delete;
+        using ValueType = T;    ///< Member Type to Access templated wrapped class
+        
+        Singleton() = delete;                               ///< Pervent Instantiation
+        Singleton(const Singleton&) = delete;               ///< Prevent Copying
+        Singleton(Singleton&&) = delete;                    ///< Prevent Moving
+        Singleton& operator=(const Singleton&) = delete;    ///< Prevent Assingment
+        
         /**
-         * @brief Writer access to instance.
-         * @return a Mutable reference to the instance.
+         * @brief Access to instance.
+         * @return a Reference to the instance.
          */
         static ValueType& get();
-        /**
-         * @brief Reader access to instance.
-         * @return a Constant reference to the instance.
-         */
-        static const ValueType& view();
-    private:
-        /**
-         * @brief Makes sure instance exists before attempting access.
-         */
-        inline static void render();
-        inline static PointerType pointer = nullptr; //!< a Unique pointer to instance.
     };
     
 } // namespace nitron
