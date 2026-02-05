@@ -20,7 +20,9 @@ jobs:
           sudo apt-get install -y doxygen graphviz
 
       - name: Build Documentation
-        run: make doc
+        run: |
+          mkdir -p docs/output
+          doxygen docs/Doxyfile
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
