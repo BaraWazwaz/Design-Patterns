@@ -45,3 +45,4 @@ To enable this automation for your repository:
     *   Set **Source** to `Deploy from a branch`.
     *   Set **Branch** to `gh-pages` and folder to `/ (root)`.
 6.  Click **Save**.
+7.  
