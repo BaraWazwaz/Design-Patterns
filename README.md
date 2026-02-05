@@ -1,0 +1,38 @@
+# Design Patterns Table Implementation
+
+This project implements a dynamic `Table` data structure in C++20, demonstrating Design Patterns such as Factory and Singleton (via concepts). It uses type erasure `IValue` to handle heterogeneous data types safe and effectively.
+
+## Github Actions' Notes for Future Reference
+
+### Concept
+**Continuous Integration (CI) and Continuous Deployment (CD)** are practices that automate the integration of code changes and the delivery of software.
+*   **CI** ensures that your code is built and tested automatically whenever you push changes, catching errors early.
+*   **CD** takes this a step further by automatically deploying your application or, in this case, your documentation.
+
+In this project, we use GitHub Actions to implement a documentation pipeline. Whenever you push code, a runner (a virtual server) automatically:
+1.  Checks out your code.
+2.  Installs documentation tools (`doxygen`, `graphviz`).
+3.  Generates the documentation website.
+4.  Deploys it to a publicly accessible branch.
+
+### Workflow
+The workflow is configured in `.github/workflows/documentation.yml`. It employs a **branch-based deployment strategy**:
+*   Documentation is deployed to the `gh-pages` branch.
+*   Each branch in your repository gets its own folder on the documentation site.
+*   **Example**:
+    *   `main` branch docs -> `https://BaraWazwaz.github.io/Design-Patterns/main/`
+    *   `dev` branch docs -> `https://BaraWazwaz.github.io/Design-Patterns/dev/`
+
+This allows you to view documentation for different versions or features in parallel without one overwriting the other.
+
+### Setup
+To enable this automation for your repository:
+
+1.  Go to your GitHub repository.
+2.  Click on **Settings** > **Pages** (in the sidebar).
+3.  Under **Build and deployment**:
+    *   Set **Source** to `Deploy from a branch`.
+    *   Set **Branch** to `gh-pages` and folder to `/ (root)`.
+4.  Click **Save**.
+
+*Note: The `gh-pages` branch will be automatically created by the GitHub Action after the first successful push.*

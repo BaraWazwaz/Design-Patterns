@@ -150,6 +150,13 @@ namespace nitron
         void popField();
 
         /**
+         * @brief Removes a field at a specific index.
+         * @param index Index of the field to remove.
+         * @throws std::out_of_range if index is invalid.
+         */
+        void eraseField(size_t index);
+
+        /**
          * @brief Gets the string representation of a cell's value.
          * @param index Index of the cell.
          * @return std::string String representation.
@@ -230,6 +237,14 @@ namespace nitron
         void removeLastField();
 
         /**
+         * @brief Removes a specific column/field from the table.
+         * Removes the header, prototype, and the corresponding cell from every record at the given index.
+         * @param index Index of the column to remove.
+         * @throws std::out_of_range if index is invalid.
+         */
+        void removeField(size_t index);
+
+        /**
          * @brief Adds a new row to the table.
          * Populates the new row with default values cloned from column prototypes.
          */
@@ -264,6 +279,14 @@ namespace nitron
          * @throws std::out_of_range if index is invalid.
          */
         const std::string& getHeader(size_t index) const;
+
+        /**
+         * @brief Sets the name of a column header.
+         * @param index Index of the column.
+         * @param header New name for the header.
+         * @throws std::out_of_range if index is invalid.
+         */
+        void setHeader(size_t index, const std::string& header);
 
         /**
          * @brief Stream output operator for Table.

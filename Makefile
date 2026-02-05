@@ -1,19 +1,20 @@
-# --- Windows Configuration ---
-# Force Make to use CMD.exe as the shell to avoid conflicts if sh.exe is in PATH
+# --- Configuration ---
 SHELL    := cmd.exe
-TARGET   := bin/main.exe
 CXX      := g++
 CXXFLAGS := -Wall -Wextra -std=c++20 -Iinclude
-SRC_DIR  := src
-OBJ_DIR  := build
-BIN_DIR  := bin
 
-# --- File Discovery ---
-# Use forward slashes for discovery (G++ understands them fine)
+# --- Project Structure ---
+BIN_DIR  := bin
+OBJ_DIR  := build
+SRC_DIR  := src
+DOC_DIR  := docs
+
+TARGET   := $(BIN_DIR)/main.exe
 SOURCES  := $(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS  := $(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 # --- Build Rules ---
+.PHONY: all clean run doc
 
 all: $(TARGET)
 
@@ -21,34 +22,29 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS) | $(BIN_DIR)
 	$(CXX) $(OBJECTS) -o $(TARGET)
 
-# Compile .cpp to .o
+# Compile source files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Windows-specific directory creation
-$(BIN_DIR) $(OBJ_DIR):
+# Directory creation (Windows-safe)
+$(BIN_DIR) $(OBJ_DIR) $(DOC_DIR):
 	@if not exist "$@" mkdir "$@"
 
+# --- Documentation ---
+doc: $(DOC_DIR)/output/index.html
+
+$(DOC_DIR)/output/index.html: $(SOURCES) include/*.hpp $(DOC_DIR)/Doxyfile
+	@echo "Generating documentation..."
+	doxygen $(DOC_DIR)/Doxyfile
+
+$(DOC_DIR)/Doxyfile: | $(DOC_DIR)
+	@echo "Configuring the $(DOC_DIR)/Doxyfile..."
+	doxygen -g $(DOC_DIR)/Doxyfile
+
 # --- Utility Commands ---
-
-.PHONY: clean run
-
-# Windows 'del' needs backslashes to work properly
-clean:
-	@if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
-	@if exist $(BIN_DIR) rmdir /s /q $(BIN_DIR)
-
 run: all
 	@.\$(TARGET)
 
-docs/output/index.html: $(SOURCES) include/*.hpp docs/Doxyfile
-	@echo "Configure the docs/Doxyfile to your preferences..."
-	doxygen docs/Doxyfile
-
-docs/Doxyfile: docs
-	@doxygen -g docs/Doxyfile
-
-docs:
-	@mkdir docs
-
-doc: docs/output/index.html
+clean:
+	@if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
+	@if exist $(BIN_DIR) rmdir /s /q $(BIN_DIR)

@@ -4,8 +4,10 @@ namespace nitron
 {
     void Record::addField(ValuePtr value)
     {
-        if (!value) throw std::invalid_argument("Cannot add null value");
-        m_cells.push_back(std::move(value));
+        if (!value) {
+            throw std::invalid_argument("Cannot add null value");
+        }
+        m_cells.emplace_back(std::move(value));
     }
 
     void Record::popField()
@@ -15,13 +17,27 @@ namespace nitron
         }
     }
 
+    void Record::eraseField(size_t index)
+    {
+        if (index >= m_cells.size()) {
+            throw std::out_of_range("Record index out of range");
+        }
+        m_cells.erase(m_cells.begin() + index);
+    }
+
     std::string Record::getString(size_t index) const
     {
+        if (index >= m_cells.size()) {
+            throw std::out_of_range("Record index out of range");
+        }
         return getCell(index).toString();
     }
 
     void Record::setString(size_t index, const std::string& val)
     {
+        if (index >= m_cells.size()) {
+            throw std::out_of_range("Record index out of range");
+        }
         getCell(index).fromString(val);
     }
 
@@ -29,13 +45,17 @@ namespace nitron
 
     IValue& Record::getCell(size_t index)
     {
-        if (index >= m_cells.size()) throw std::out_of_range("Record index out of range");
+        if (index >= m_cells.size()) {
+            throw std::out_of_range("Record index out of range");
+        }
         return *m_cells[index];
     }
 
     const IValue& Record::getCell(size_t index) const
     {
-        if (index >= m_cells.size()) throw std::out_of_range("Record index out of range");
+        if (index >= m_cells.size()) {
+            throw std::out_of_range("Record index out of range");
+        }
         return *m_cells[index];
     }
 
@@ -51,6 +71,17 @@ namespace nitron
         }
     }
 
+    void Table::removeField(size_t index)
+    {
+        if (index >= m_headers.size()) {
+            throw std::out_of_range("Header index out of range");
+        }
+        m_prototypes.erase(m_prototypes.begin() + index);
+        for (Record& record : m_records) {
+            record.eraseField(index);
+        }
+    }
+
     void Table::addRow()
     {
         Record newRecord;
@@ -62,19 +93,31 @@ namespace nitron
 
     Record& Table::getRow(size_t index)
     {
-        if (index >= m_records.size()) throw std::out_of_range("Row index out of range");
+        if (index >= m_records.size()) {
+            throw std::out_of_range("Row index out of range");
+        }
         return m_records[index];
     }
 
     const Record& Table::getRow(size_t index) const
     {
-        if (index >= m_records.size()) throw std::out_of_range("Row index out of range");
+        if (index >= m_records.size()) {
+            throw std::out_of_range("Row index out of range");
+        }
         return m_records[index];
     }
 
     size_t Table::rowCount() const { return m_records.size(); }
     size_t Table::colCount() const { return m_headers.size(); }
     const std::string& Table::getHeader(size_t index) const { return m_headers.at(index); }
+
+    void Table::setHeader(size_t index, const std::string& name)
+    {
+        if (index >= m_headers.size()) {
+            throw std::out_of_range("Header index out of range");
+        }
+        m_headers[index] = name;
+    }
 
     std::ostream& operator<<(std::ostream& os, const Table& table)
     {
