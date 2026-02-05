@@ -3,7 +3,7 @@
 SHELL    := cmd.exe
 TARGET   := bin/main.exe
 CXX      := g++
-CXXFLAGS := -Wall -Wextra -std=c++23 -Iinclude
+CXXFLAGS := -Wall -Wextra -std=c++20 -Iinclude
 SRC_DIR  := src
 OBJ_DIR  := build
 BIN_DIR  := bin

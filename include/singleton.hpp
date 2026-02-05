@@ -28,7 +28,7 @@ namespace nitron
      * @brief Singleton class wrapper.
      * @tparam T Type to be wrapped as Singleton,
      *  a class has to be :
-     * - Not Default Constructable.
+     * - Privately Default Constructable.
      * - Not Copy Constructable.
      * - Not Move Constructable.
      * - Not Copy Assignable.
