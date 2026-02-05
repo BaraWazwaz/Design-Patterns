@@ -43,7 +43,6 @@ run: all
 
 docs/output/index.html: $(SOURCES) include/*.hpp docs/Doxyfile
 	@echo "Configure the docs/Doxyfile to your preferences..."
-	@pause
 	doxygen docs/Doxyfile
 
 docs/Doxyfile: docs
