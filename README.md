@@ -28,15 +28,20 @@ This allows you to view documentation for different versions or features in para
 ### Setup
 To enable this automation for your repository:
 
-1.  **Push your changes** to GitHub:
+1.  **Configure Action Permissions**:
+    *   Go to **Settings** > **Actions** > **General**.
+    *   Under **Action permissions**, select **Allow all actions and reusable workflows**.
+    *   *Why?* The default setting might be too restrictive, blocking standard actions like `actions/checkout`.
+
+2.  **Push your changes** to GitHub:
     ```bash
     git add .
     git commit -m "Add documentation workflow"
     git push
     ```
-2.  Wait for the **Action** to run successfully (check the "Actions" tab in your repository). This will create the `gh-pages` branch.
-3.  Go to your GitHub repository **Settings** > **Pages**.
-4.  Under **Build and deployment**:
+3.  Wait for the **Action** to run successfully (check the "Actions" tab in your repository). This will create the `gh-pages` branch.
+4.  Go to your GitHub repository **Settings** > **Pages**.
+5.  Under **Build and deployment**:
     *   Set **Source** to `Deploy from a branch`.
     *   Set **Branch** to `gh-pages` and folder to `/ (root)`.
-5.  Click **Save**.
+6.  Click **Save**.
