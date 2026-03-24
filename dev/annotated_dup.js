@@ -6,6 +6,7 @@ var annotated_dup =
       [ "HeterogeneousDS", "d0/df3/structnitron_1_1HeterogeneousDS.html", null ],
       [ "HomogeneousDSTag", "d7/d9a/structnitron_1_1HomogeneousDSTag.html", null ],
       [ "IterableTag", "df/d08/structnitron_1_1IterableTag.html", null ],
+      [ "Iterator", "d9/da4/classnitron_1_1Iterator.html", "d9/da4/classnitron_1_1Iterator" ],
       [ "IteratorTag", "d5/dc1/structnitron_1_1IteratorTag.html", null ],
       [ "IValue", "d3/d57/classnitron_1_1IValue.html", "d3/d57/classnitron_1_1IValue" ],
       [ "LinearDSTag", "d0/d08/structnitron_1_1LinearDSTag.html", null ],

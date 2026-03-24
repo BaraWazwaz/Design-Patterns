@@ -102,10 +102,12 @@ $(document).ready(function(){initNavTree('d1/db4/conceptnitron_1_1IterableClass.
 <div class="line">    <span class="keyword">requires</span> <a class="code hl_concept" href="../../d2/dd1/conceptnitron_1_1HomogeneousDSClass.html">HomogeneousDSClass&lt;T&gt;</a>;</div>
 <div class="line">    <span class="keyword">requires</span> std::is_base_of_v&lt;IterableTag, typename T::Info&gt;;</div>
 <div class="line">    </div>
-<div class="line">    <span class="keyword">typename</span> T::Iterator;</div>
-<div class="line">    <span class="keyword">requires</span> <a class="code hl_concept" href="../../d7/dbc/conceptnitron_1_1IteratorClass.html">IteratorClass&lt;typename T::Iterator&gt;</a>;</div>
+<div class="line">    <span class="keyword">typename</span> T::Info::Iterator;</div>
+<div class="line">    </div>
+<div class="line">    <span class="keyword">requires</span> <a class="code hl_concept" href="../../d7/dbc/conceptnitron_1_1IteratorClass.html">IteratorClass&lt;typename T::Info::Iterator&gt;</a>;</div>
+<div class="line">    </div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">requires</span> std::convertible_to&lt;<span class="keyword">decltype</span>(*<span class="keyword">typename</span> T::Iterator()), <span class="keyword">typename</span> T::ValueType&amp;&gt;;</div>
+<div class="line">    <span class="keyword">requires</span> std::convertible_to&lt;<span class="keyword">decltype</span>(*<span class="keyword">typename</span> T::Info::Iterator()), <span class="keyword">typename</span> T::Info::ValueType&amp;&gt;;</div>
 <div class="line">}</div>
 <div class="ttc" id="aconceptnitron_1_1HomogeneousDSClass_html"><div class="ttname"><a href="../../d2/dd1/conceptnitron_1_1HomogeneousDSClass.html">nitron::HomogeneousDSClass</a></div><div class="ttdef"><b>Definition</b> DataStructures.hpp:46</div></div>
 <div class="ttc" id="aconceptnitron_1_1IterableClass_html"><div class="ttname"><a href="../../d1/db4/conceptnitron_1_1IterableClass.html">nitron::IterableClass</a></div><div class="ttdef"><b>Definition</b> DataStructures.hpp:59</div></div>
