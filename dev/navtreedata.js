@@ -53,7 +53,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"annotated.html"
+"annotated.html",
+"de/da5/classnitron_1_1Spec.html#a61d729e3ff6da01d4ef7b54add0e08b2"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

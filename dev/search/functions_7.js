@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['removefield_0',['removeField',['../d5/d58/classnitron_1_1Table.html#a6d07e4dabb594152087c853918684ef1',1,'nitron::Table']]],
-  ['removelastfield_1',['removeLastField',['../d5/d58/classnitron_1_1Table.html#a2e594aa3b77c592c83794563d56bf7dc',1,'nitron::Table']]],
-  ['rowcount_2',['rowCount',['../d5/d58/classnitron_1_1Table.html#a6044b92ecca8176a2536728f077d1d4f',1,'nitron::Table']]]
+  ['popfield_0',['popField',['../dd/dfe/classnitron_1_1Record.html#adb1895d11e1134eb6e700e9af8074606',1,'nitron::Record']]],
+  ['print_1',['print',['../da/d78/classnitron_1_1StaticArray.html#a84b6fe7fbaf0bfbfdb625dc51961a0a0',1,'nitron::StaticArray']]]
 ];

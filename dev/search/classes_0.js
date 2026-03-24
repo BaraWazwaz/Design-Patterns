@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ivalue_0',['IValue',['../d3/d57/classnitron_1_1IValue.html',1,'nitron']]]
+  ['datastructuretag_0',['DataStructureTag',['../d2/d09/structnitron_1_1DataStructureTag.html',1,'nitron']]]
 ];

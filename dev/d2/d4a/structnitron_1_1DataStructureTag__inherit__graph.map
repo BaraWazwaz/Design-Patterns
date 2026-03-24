@@ -1,0 +1,24 @@
+<map id="nitron::DataStructureTag" name="nitron::DataStructureTag">
+<area shape="rect" id="Node000001" title=" " alt="" coords="303,119,475,184"/>
+<area shape="rect" id="Node000003" href="$d0/df3/structnitron_1_1HeterogeneousDS.html" title=" " alt="" coords="156,232,333,297"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="339,195,287,234,284,230,335,190"/>
+<area shape="rect" id="Node000006" href="$d7/d9a/structnitron_1_1HomogeneousDSTag.html" title=" " alt="" coords="487,232,682,297"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="458,189,530,230,528,234,455,193"/>
+<area shape="rect" id="Node000002" href="$df/d08/structnitron_1_1Tag.html" title="Base class for defining tags." alt="" coords="347,5,430,71"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="391,84,391,119,386,119,386,84"/>
+<area shape="rect" id="Node000004" href="$d5/d3b/structnitron_1_1PolymorphicDS.html" title=" " alt="" coords="5,353,164,418"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="192,308,129,354,126,350,189,304"/>
+<area shape="rect" id="Node000005" href="$d2/d0b/structnitron_1_1TupleDS.html" title=" " alt="" coords="189,353,301,418"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="247,311,247,352,242,352,242,311"/>
+<area shape="rect" id="Node000007" href="$da/dea/structnitron_1_1GraphDS.html" title=" " alt="" coords="325,353,442,418"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="521,307,438,355,436,350,518,302"/>
+<area shape="rect" id="Node000008" href="$df/d08/structnitron_1_1IterableTag.html" title=" " alt="" coords="467,353,599,418"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="568,311,549,353,544,351,563,309"/>
+<area shape="rect" id="Node000009" href="$d0/d08/structnitron_1_1LinearDSTag.html" title=" " alt="" coords="515,473,655,539"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="604,310,613,345,617,385,613,426,600,474,595,472,607,425,611,385,607,346,599,311"/>
+<area shape="rect" id="Node000010" href="$d2/d9f/structnitron_1_1StaticArray_1_1Info.html" title=" " alt="" coords="675,345,807,425"/>
+<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="639,304,691,343,688,347,636,308"/>
+<area shape="rect" id="Node000011" href="$d6/d0c/structnitron_1_1TreeDS.html" title=" " alt="" coords="831,353,936,418"/>
+<area shape="poly" id="edge11_Node000006_Node000011" title=" " alt="" coords="696,296,758,318,819,343,834,350,831,355,817,348,756,323,695,301"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="555,430,573,472,568,474,550,432"/>
+</map>

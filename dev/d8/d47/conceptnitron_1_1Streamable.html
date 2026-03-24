@@ -100,15 +100,16 @@ $(document).ready(function(){initNavTree('d8/d47/conceptnitron_1_1Streamable.htm
 <p><code>#include &lt;<a class="el" href="../../de/d2d/table_8hpp_source.html">table.hpp</a>&gt;</code></p>
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Type&gt;</div>
-<div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d8/d47/conceptnitron_1_1Streamable.html">nitron::Streamable</a> =  <span class="keyword">requires</span>(std::ostream&amp; os, </div>
-<div class="line">                                  std::istream&amp; is, </div>
-<div class="line">                                  Type&amp; val, </div>
-<div class="line">                                  <span class="keyword">const</span> Type&amp; c_val)</div>
-<div class="line">    {</div>
-<div class="line">        { os &lt;&lt; c_val };</div>
-<div class="line">        { is &gt;&gt; val };</div>
-<div class="line">    }</div>
-<div class="ttc" id="aconceptnitron_1_1Streamable_html"><div class="ttname"><a href="../../d8/d47/conceptnitron_1_1Streamable.html">nitron::Streamable</a></div><div class="ttdoc">Concept ensuring a type satisfies input/output stream operations.</div><div class="ttdef"><b>Definition</b> table.hpp:35</div></div>
+<div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d8/d47/conceptnitron_1_1Streamable.html">nitron::Streamable</a> =  <span class="keyword">requires</span>(std::ostream&amp; <a class="code hl_typedef" href="../../de/d94/namespacenitron.html#a68d22823d673ba8428e3e0af5e681f7c">os</a>, </div>
+<div class="line">                                std::istream&amp; <a class="code hl_typedef" href="../../de/d94/namespacenitron.html#a68d22823d673ba8428e3e0af5e681f7c">is</a>, </div>
+<div class="line">                                Type&amp; <a class="code hl_typedef" href="../../de/d94/namespacenitron.html#a68d22823d673ba8428e3e0af5e681f7c">val</a>, </div>
+<div class="line">                                <span class="keyword">const</span> Type&amp; <a class="code hl_typedef" href="../../de/d94/namespacenitron.html#a68d22823d673ba8428e3e0af5e681f7c">c_val</a>)</div>
+<div class="line">{</div>
+<div class="line">    { <a class="code hl_typedef" href="../../de/d94/namespacenitron.html#a68d22823d673ba8428e3e0af5e681f7c">os</a> &lt;&lt; <a class="code hl_typedef" href="../../de/d94/namespacenitron.html#a68d22823d673ba8428e3e0af5e681f7c">c_val</a> };</div>
+<div class="line">    { <a class="code hl_typedef" href="../../de/d94/namespacenitron.html#a68d22823d673ba8428e3e0af5e681f7c">is</a> &gt;&gt; <a class="code hl_typedef" href="../../de/d94/namespacenitron.html#a68d22823d673ba8428e3e0af5e681f7c">val</a> };</div>
+<div class="line">}</div>
+<div class="ttc" id="aconceptnitron_1_1Streamable_html"><div class="ttname"><a href="../../d8/d47/conceptnitron_1_1Streamable.html">nitron::Streamable</a></div><div class="ttdoc">Concept ensuring a type satisfies input/output stream operations.</div><div class="ttdef"><b>Definition</b> table.hpp:36</div></div>
+<div class="ttc" id="anamespacenitron_html_a68d22823d673ba8428e3e0af5e681f7c"><div class="ttname"><a href="../../de/d94/namespacenitron.html#a68d22823d673ba8428e3e0af5e681f7c">nitron::ForEachFunction</a></div><div class="ttdeci">std::function&lt; void(const T &amp;)&gt; ForEachFunction</div><div class="ttdef"><b>Definition</b> utilities.hpp:12</div></div>
 </div><!-- fragment --><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Concept ensuring a type satisfies input/output stream operations. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>

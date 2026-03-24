@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['value_0',['Value',['../d5/d29/classnitron_1_1Value.html',1,'nitron']]]
+  ['lineardstag_0',['LinearDSTag',['../d0/d08/structnitron_1_1LinearDSTag.html',1,'nitron']]]
 ];

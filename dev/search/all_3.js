@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['fromstring_0',['fromstring',['../d3/d57/classnitron_1_1IValue.html#a492616bf2ae3b0e3317e7c2dd752ceb9',1,'nitron::IValue::fromString()'],['../d5/d29/classnitron_1_1Value.html#ae4ebca2cd491d8756aecc7d15cae1341',1,'nitron::Value::fromString()']]]
+  ['datastructures_2ehpp_0',['DataStructures.hpp',['../d5/d62/DataStructures_8hpp.html',1,'']]],
+  ['datastructuretag_1',['DataStructureTag',['../d2/d09/structnitron_1_1DataStructureTag.html',1,'nitron']]],
+  ['direct_2',['direct',['../de/da5/classnitron_1_1Spec.html#a5e3d21faea828a3940662ab45c3f154d',1,'nitron::Spec']]]
 ];

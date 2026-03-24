@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['record_0',['Record',['../dd/dfe/classnitron_1_1Record.html',1,'nitron']]]
+  ['graphds_0',['GraphDS',['../da/dea/structnitron_1_1GraphDS.html',1,'nitron']]]
 ];

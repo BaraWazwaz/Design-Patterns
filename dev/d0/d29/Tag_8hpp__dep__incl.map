@@ -1,0 +1,10 @@
+<map id="include/Tag.hpp" name="include/Tag.hpp">
+<area shape="rect" id="Node000001" title="Provides functionality to define and identify tags using traits." alt="" coords="27,5,150,31"/>
+<area shape="rect" id="Node000002" href="$d5/d62/DataStructures_8hpp.html" title="Main header of library data structures." alt="" coords="5,167,172,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,43,58,79,55,99,58,118,67,143,79,165,74,168,62,145,53,119,49,99,53,78,70,41"/>
+<area shape="rect" id="Node000004" href="$dc/d5f/utilities_8hpp.html" title=" " alt="" coords="67,79,233,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="108,40,137,77,133,80,104,43"/>
+<area shape="rect" id="Node000003" href="$d4/dde/StaticArray_8hpp.html" title=" " alt="" coords="5,255,172,295"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,221,91,254,86,254,86,221"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="131,132,104,168,100,165,126,128"/>
+</map>

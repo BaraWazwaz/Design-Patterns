@@ -1,7 +1,14 @@
 var searchData=
 [
-  ['table_0',['table',['../d5/d58/classnitron_1_1Table.html',1,'nitron::Table'],['../dd/dfe/classnitron_1_1Record.html#af888815e80064bc9fa1035c6265da86e',1,'nitron::Record::Table']]],
-  ['table_2ehpp_1',['table.hpp',['../de/d2d/table_8hpp.html',1,'']]],
-  ['table_2etpp_2',['table.tpp',['../d8/d82/table_8tpp.html',1,'']]],
-  ['tostring_3',['tostring',['../d3/d57/classnitron_1_1IValue.html#af7ace037bdef355abbf4455a07336208',1,'nitron::IValue::toString()'],['../d5/d29/classnitron_1_1Value.html#a43428632ac04d707418c3de14572a9e0',1,'nitron::Value::toString()']]]
+  ['nitron_0',['nitron',['../de/d94/namespacenitron.html',1,'']]],
+  ['nitron_3a_3adatastructureclass_1',['DataStructureClass',['../d1/d5b/conceptnitron_1_1DataStructureClass.html',1,'nitron']]],
+  ['nitron_3a_3adifferenttypes_2',['DifferentTypes',['../df/d33/conceptnitron_1_1DifferentTypes.html',1,'nitron']]],
+  ['nitron_3a_3ahomogeneousdsclass_3',['HomogeneousDSClass',['../d2/dd1/conceptnitron_1_1HomogeneousDSClass.html',1,'nitron']]],
+  ['nitron_3a_3aiterableclass_4',['IterableClass',['../d1/db4/conceptnitron_1_1IterableClass.html',1,'nitron']]],
+  ['nitron_3a_3aiteratorclass_5',['IteratorClass',['../d7/dbc/conceptnitron_1_1IteratorClass.html',1,'nitron']]],
+  ['nitron_3a_3alineardsclass_6',['LinearDSClass',['../dc/d68/conceptnitron_1_1LinearDSClass.html',1,'nitron']]],
+  ['nitron_3a_3apropersingleton_7',['ProperSingleton',['../da/d8d/conceptnitron_1_1ProperSingleton.html',1,'nitron']]],
+  ['nitron_3a_3astreamable_8',['Streamable',['../d8/d47/conceptnitron_1_1Streamable.html',1,'nitron']]],
+  ['nitron_3a_3atagclass_9',['TagClass',['../d8/d3b/conceptnitron_1_1TagClass.html',1,'nitron']]],
+  ['nitrontag_10',['NitronTag',['../df/d08/structnitron_1_1Tag.html#aa8f23a51b75a1b1d5301924ddd815d71',1,'nitron::Tag']]]
 ];
