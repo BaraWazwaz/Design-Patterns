@@ -61,10 +61,12 @@ concept IterableClass = requires()
     requires HomogeneousDSClass<T>;
     requires std::is_base_of_v<IterableTag, typename T::Info>;
     
-    typename T::Iterator;
-    requires IteratorClass<typename T::Iterator>;
+    typename T::Info::Iterator;
+    // typename T::Info::IteratorConst;
+    requires IteratorClass<typename T::Info::Iterator>;
+    // requires IteratorClass<typename T::Info::IteratorConst>;
 
-    requires std::convertible_to<decltype(*typename T::Iterator()), typename T::ValueType&>;
+    requires std::convertible_to<decltype(*typename T::Info::Iterator()), typename T::Info::ValueType&>;
 };
 
 struct LinearDSTag : virtual public HomogeneousDSTag, virtual public IterableTag {};

@@ -72,13 +72,13 @@ StaticArray<T,S>::Info::Iterator StaticArray<T,S>::end()
 }
 
 template <typename T, std::size_t S>
-StaticArray<T,S>::Info::Iterator StaticArray<T,S>::begin() const
+StaticArray<T,S>::Info::IteratorConst StaticArray<T,S>::begin() const
 {
     return m_array;
 }
 
 template <typename T, std::size_t S>
-StaticArray<T,S>::Info::Iterator StaticArray<T,S>::end() const
+StaticArray<T,S>::Info::IteratorConst StaticArray<T,S>::end() const
 {
     return m_array + S;
 }

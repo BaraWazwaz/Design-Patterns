@@ -18,7 +18,7 @@ public:
 
     template <typename T>
     static Test checkThrowValue(const std::function<void()>& function,
-                                std::function<bool(T)> checker,
+                                std::function<bool(const T&)> checker,
                                 const std::string& message = "[No Message]");
 
     template <typename T>
@@ -28,9 +28,14 @@ public:
 
     bool state(std::ostream& os, std::size_t tabs = 0);
 
+    Test toPass() &;
+    Test toPass() &&;
+    Test toFail() &;
+    Test toFail() &&;
+
 private:
     bool verdict;
-    std::string message;
+    std::string message = "[No Message]";
 
     Test() = delete;
     Test(bool verdict, const std::string& message);

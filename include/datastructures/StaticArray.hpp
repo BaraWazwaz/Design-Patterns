@@ -2,6 +2,7 @@
 
 #include <iosfwd>
 #include "DataStructures.hpp"
+#include "Iterator.hpp"
 
 namespace nitron
 {
@@ -10,11 +11,12 @@ template <typename T, std::size_t S>
 class StaticArray
 {
 public:
-    struct Info : public HomogeneousDSTag
+    struct Info : public LinearDSTag
     {
         using KeyType = std::size_t;
         using ValueType = T;
-        using Iterator = T*;
+        using Iterator = nitron::Iterator<T>;
+        using IteratorConst = nitron::Iterator<const T>;
         inline static std::size_t const SIZE = S;
 
         template <typename T_, std::size_t S_>
@@ -27,8 +29,8 @@ public:
 
     Info::Iterator begin();
     Info::Iterator end();
-    Info::Iterator begin() const;
-    Info::Iterator end() const;
+    Info::IteratorConst begin() const;
+    Info::IteratorConst end() const;
     
     T& at(const std::size_t& index);
     const T& at(const std::size_t& index) const;
@@ -63,6 +65,8 @@ public:
 private:
     T m_array[S];
 };
+
+static_assert(nitron::IterableClass<nitron::StaticArray<int,10>>);
 
 } // namespace nitron
 

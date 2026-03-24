@@ -9,14 +9,14 @@ Test Test::checkThrowType(const std::function<void()>& function,
 {
     bool verdict = false;
     try { function(); }
-    catch(const T& x) { verdict = false; }
+    catch(const T& x) { verdict = true; }
     catch(...) {}
     return Test(verdict, message);
 }
 
 template <typename T>
 Test Test::checkThrowValue(const std::function<void()>& function,
-                           std::function<bool(T)> checker,
+                           std::function<bool(const T&)> checker,
                            const std::string& message)
 {
     bool verdict = false;
