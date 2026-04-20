@@ -1,81 +1,144 @@
 #pragma once
 
+#include "Table.hpp"
+
 namespace nitron
 {
 
 template <Streamable Type>
-Value<Type>::Value(Type val) : 
-    m_data(std::move(val))
-{}
-
-template <Streamable Type>
-ValuePtr Value<Type>::clone() const 
+std::unique_ptr<IDataHolder> DataHolder<Type>::clone() const
 {
-    return std::make_unique<Value<Type>>(m_data);
+    return std::make_unique<DataHolder<Type>>(m_data);
 }
 
 template <Streamable Type>
-std::type_index Value<Type>::getType() const 
+std::type_index DataHolder<Type>::getType() const
 {
     return typeid(Type);
 }
 
 template <Streamable Type>
-std::string Value<Type>::toString() const 
+std::string DataHolder<Type>::getString() const
 {
-    if constexpr (std::is_same_v<Type, std::string>) {
-        return m_data;
-    } else {
-        std::ostringstream oss;
-        oss << m_data;
-        return oss.str();
+    std::stringstream str;
+    str << m_data;
+    return str.str();
+}
+
+template <Streamable Type>
+void DataHolder<Type>::setString(std::string const& string)
+{
+    std::stringstream str;
+    str << string;
+    str >> m_data;
+    if (str.fail())
+    {
+        throw std::invalid_argument("type of string received from DataHolder<Type>::setString did not match the type Type.");
     }
 }
 
 template <Streamable Type>
-void Value<Type>::fromString(const std::string& str)
-{
-    if constexpr (std::is_same_v<Type, std::string>) {
-        m_data = str;
-    } else {
-        std::istringstream iss(str);
-        iss >> m_data;
-        if (iss.fail()) {
-            throw std::runtime_error("Failed to parse string into type " + std::string(typeid(Type).name()));
-        }
-    }
-}
-
-template <Streamable Type>
-void Value<Type>::set(const Type& val) 
-{
-    m_data = val;
-}
-
-template <Streamable Type>
-const Type& Value<Type>::get() const 
+Type const& DataHolder<Type>::get() const
 {
     return m_data;
 }
 
 template <Streamable Type>
-void Record::set(size_t index, const Type& val)
+void DataHolder<Type>::set(Type&& value)
 {
-    IValue& cell = getCell(index);
-    if (cell.getType() != typeid(Type)) {
-        throw std::bad_cast();
-    }
-    static_cast<Value<Type>&>(cell).set(val);
+    m_data = std::forward<Type>(value);
 }
 
 template <Streamable Type>
-void Table::addField(const std::string& name, const Type& defaultValue)
+template <typename... Args>
+DataHolder<Type>::DataHolder(Args&&... args)
+    : m_data(std::forward<Args>(args)...)
+{}
+
+template <Streamable Type>
+void Record::pushBackField(Type&& value)
 {
-    m_headers.push_back(name);
-    m_prototypes.push_back(std::make_unique<Value<Type>>(defaultValue));
+    m_cells.emplace_back(
+        std::make_unique<DataHolder<Type>>(
+            std::forward<Type>(value)
+        )
+    );
+}
+
+template <Streamable Type>
+void Record::pushFrontField(Type&& value)
+{
+    m_cells.emplace_front(
+        std::make_unique<DataHolder<Type>>(
+            std::forward<Type>(value)
+        )
+    );
+}
+
+template <Streamable Type>
+void Record::insertField(size_t index, Type&& value)
+{
+    m_cells.emplace(m_cells.cbegin() + index,
+        std::make_unique<DataHolder<Type>>(
+            std::forward<Type>(value)
+        )
+    );
+}
+
+template <Streamable Type>
+Type const& Record::get(size_t index) const
+{
+    IDataHolder const& cell = *m_cells.at(index);
+    if (typeid(Type) != cell.getType())
+    {
+        throw std::invalid_argument("type expected of field from Record::get<Type>() did not match type of data inside DataHolder");
+    }
+    DataHolder<Type> const& cellTyped = static_cast<DataHolder<Type> const&>(cell);
+    return cellTyped.get();
+}
+
+template <Streamable Type>
+void Record::set(size_t index, Type&& value)
+{
+    IDataHolder const& cell = *m_cells.at(index);
+    if (typeid(Type) != cell.getType())
+    {
+        throw std::invalid_argument("type expected of field from Record::get<Type>() did not match type of data inside DataHolder");
+    }
+    DataHolder<Type> const& cellTyped = static_cast<DataHolder<Type> const&>(cell);
+    cellTyped.set(std::forward<Type>(value));
+}
+
+template <Streamable Type>
+void Table::pushBackField(std::string const& header, Type const& defaultValue)
+{
+    m_headers.emplace_back(header);
+    m_prototypes.pushBackField(Type(defaultValue));
     for (Record& record : m_records)
     {
-        record.addField(std::make_unique<Value<Type>>(defaultValue));
+        record.pushBackField(Type(defaultValue));
+    }
+}
+
+template <Streamable Type>
+void Table::pushFrontField(std::string const& header, Type const& defaultValue)
+{
+    m_headers.emplace_front(header);
+    m_prototypes.pushFrontField(Type(defaultValue));
+    for (Record& record : m_records)
+    {
+        record.pushFrontField(Type(defaultValue));
+    }
+}
+
+template <Streamable Type>
+void Table::insertField(size_t index, std::string const& header, Type const& defaultValue)
+{
+    m_headers.emplace(m_headers.cbegin() + index, header);
+    m_prototypes.insertField(index, Type(defaultValue));
+    for (Record& record : m_records)
+    {
+        record.insertField(index, Type(defaultValue));
     }
 }
 

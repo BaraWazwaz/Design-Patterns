@@ -2,171 +2,232 @@
 
 namespace nitron
 {
-    void Record::addField(ValuePtr value)
+
+void Record::popBackField()
+{
+    m_cells.pop_back();
+}
+
+void Record::popFrontField()
+{
+    m_cells.pop_front();
+}
+
+void Record::eraseField(size_t index)
+{
+    m_cells.erase(m_cells.cbegin() + index);
+}
+
+IDataHolder& Record::at(size_t index)
+{
+    return *m_cells.at(index);
+}
+
+IDataHolder const& Record::at(size_t index) const
+{
+    return *m_cells.at(index);
+}
+
+std::string Record::getString(size_t index) const
+{
+    IDataHolder const& cell = *m_cells.at(index);
+    return cell.getString();
+}
+
+void Record::setString(size_t index, std::string const& value)
+{
+    IDataHolder& cell = *m_cells.at(index);
+    cell.setString(value);
+}
+
+size_t Record::degree() const
+{
+    return m_cells.size();
+}
+
+size_t Record::incompatability(Record const& record) const
+{
+    size_t size = degree();
+    if (record.degree() != size)
     {
-        if (!value)
-        {
-            throw std::invalid_argument("Cannot add null value");
-        }
-        m_cells.emplace_back(std::move(value));
+        return SIZE_MISMATCH;
     }
-
-    void Record::popField()
+    for (size_t index = 0; index < size; ++index)
     {
-        if (!m_cells.empty())
+        if (record.at(index).getType() != at(index).getType())
         {
-            m_cells.pop_back();
-        }
-    }
-
-    void Record::eraseField(size_t index)
-    {
-        if (index >= m_cells.size())
-        {
-            throw std::out_of_range("Record index out of range");
-        }
-        m_cells.erase(m_cells.begin() + index);
-    }
-
-    std::string Record::getString(size_t index) const
-    {
-        if (index >= m_cells.size())
-        {
-            throw std::out_of_range("Record index out of range");
-        }
-        return getCell(index).toString();
-    }
-
-    void Record::setString(size_t index, const std::string& val)
-    {
-        if (index >= m_cells.size())
-        {
-            throw std::out_of_range("Record index out of range");
-        }
-        getCell(index).fromString(val);
-    }
-
-    size_t Record::size() const
-    {
-        return m_cells.size();
-    }
-
-    IValue& Record::getCell(size_t index)
-    {
-        if (index >= m_cells.size())
-        {
-            throw std::out_of_range("Record index out of range");
-        }
-        return *m_cells[index];
-    }
-
-    const IValue& Record::getCell(size_t index) const
-    {
-        if (index >= m_cells.size())
-        {
-            throw std::out_of_range("Record index out of range");
-        }
-        return *m_cells[index];
-    }
-
-    void Table::removeLastField()
-    {
-        if (m_headers.empty())
-        {
-            return;
-        }
-
-        m_headers.pop_back();
-        m_prototypes.pop_back();
-
-        for (auto& record : m_records)
-        {
-            record.popField();
+            return index;
         }
     }
+    return size;
+}
 
-    void Table::removeField(size_t index)
+void Table::popBackField()
+{
+    m_headers.pop_back();
+    m_prototypes.popBackField();
+    for (Record& record : m_records)
     {
-        if (index >= m_headers.size())
+        record.popBackField();
+    }
+}
+
+void Table::popFrontField()
+{
+    m_headers.pop_front();
+    m_prototypes.popFrontField();
+    for (Record& record : m_records)
+    {
+        record.popFrontField();
+    }
+}
+
+void Table::eraseField(size_t index)
+{
+    m_headers.erase(m_headers.cbegin() + index);
+    m_prototypes.eraseField(index);
+    for (Record& record : m_records)
+    {
+        record.eraseField(index);
+    }
+}
+
+void Table::pushBackRecord(Record&& record)
+{
+    assertCompatibility(record);
+    m_records.emplace_back(std::forward<Record>(record));
+}
+
+void Table::pushFrontRecord(Record&& record)
+{
+    assertCompatibility(record);
+    m_records.emplace_front(std::forward<Record>(record));
+}
+
+void Table::insertRecord(size_t index, Record&& record)
+{
+    assertCompatibility(record);
+    m_records.emplace(m_records.cbegin() + index, std::forward<Record>(record));
+}
+
+void Table::popBackRecord()
+{
+    m_records.pop_back();
+}
+
+void Table::popFrontRecord()
+{
+    m_records.pop_front();
+}
+
+void Table::eraseRecord(size_t index)
+{
+    m_records.erase(m_records.cbegin() + index);
+}
+
+Record& Table::getRecord(size_t index)
+{
+    return m_records.at(index);
+}
+
+Record const& Table::getRecord(size_t index) const
+{
+    return m_records.at(index);
+}
+
+size_t Table::rowCount() const
+{
+    return m_records.size();
+}
+
+size_t Table::columnCount() const
+{
+    return m_prototypes.degree();
+}
+
+std::string const& Table::getHeader(size_t index) const
+{
+    return m_headers.at(index);
+}
+
+void Table::setHeader(size_t index, std::string const& header)
+{
+    m_headers.at(index) = header;
+}
+
+void Table::assertCompatibility(Record const& record) const
+{
+    size_t mismatch = m_prototypes.incompatability(record);
+    if (mismatch != m_prototypes.degree())
+    {
+        if (mismatch == Record::SIZE_MISMATCH)
         {
-            throw std::out_of_range("Header index out of range");
+            throw std::invalid_argument("could not Table::pushBackRecord() a Record of a different degree.");
         }
-        m_prototypes.erase(m_prototypes.begin() + index);
-        for (Record& record : m_records)
+        else
         {
-            record.eraseField(index);
+            throw std::invalid_argument("could not Table::pushBackRecord() a Record of an incompatible corresponding value");
         }
     }
+}
 
-    void Table::addRow()
+std::ostream& operator<<(std::ostream& os, const Table& table)
+{
+    size_t rows    = table.rowCount();
+    size_t columns = table.columnCount();
+    std::vector<std::string> data (rows * columns);
+    std::vector<std::string> headers (columns);
+
+    const size_t width = Table::MAX_FIELD_WIDTH;        
+    static auto clip = [](std::string& cell) -> void
     {
-        Record newRecord;
-        for (const auto& proto : m_prototypes)
+        if (cell.size() > width)
         {
-            newRecord.addField(proto->clone());
+            cell.resize(width);
+            for (size_t character = 1; character <= 3; ++character)
+            {
+                cell.at(width - character) = '.';
+            }
         }
-        m_records.push_back(std::move(newRecord));
+    };
+    
+    for (size_t column = 0; column < columns; ++column)
+    {
+        std::string& cell = headers[column];
+        cell = table.getHeader(column);
+        clip(cell);
     }
 
-    Record& Table::getRow(size_t index)
+    for (size_t row = 0; row < rows; ++row)
     {
-        if (index >= m_records.size()) {
-            throw std::out_of_range("Row index out of range");
-        }
-        return m_records[index];
-    }
-
-    const Record& Table::getRow(size_t index) const
-    {
-        if (index >= m_records.size())
+        Record const& record = table.getRecord(row);
+        for (size_t column = 0; column < columns; ++column)
         {
-            throw std::out_of_range("Row index out of range");
+            std::string& cell = data[row * columns + column];
+            cell = record.getString(column);
+            clip(cell);
         }
-        return m_records[index];
     }
 
-    size_t Table::rowCount() const
+    os << std::string(columns * (width + 3) + 1, '-') << "\n";
+    os << "|";
+    for (std::string const& header : headers)
     {
-        return m_records.size();
+        os << " " << std::setw(width) << header << " |";
     }
-    size_t Table::colCount() const
+    os << "\n";
+    os << std::string(columns * (width + 3) + 1, '-') << "\n";
+    for (size_t row = 0; row < rows; ++row)
     {
-        return m_headers.size();
-    }
-    const std::string& Table::getHeader(size_t index) const
-    {
-        return m_headers.at(index);
-    }
-
-    void Table::setHeader(size_t index, const std::string& name)
-    {
-        if (index >= m_headers.size())
+        os << "|";
+        for (size_t column = 0; column < columns; ++column)
         {
-            throw std::out_of_range("Header index out of range");
-        }
-        m_headers[index] = name;
-    }
-
-    std::ostream& operator<<(std::ostream& os, const Table& table)
-    {
-        os << "Fields:\n";
-        for (const std::string& header : table.m_headers)
-        {
-            os << "\t" << header << "\n";
+            os << " " << std::setw(width) << data[row * columns + column] << " |";
         }
         os << "\n";
-
-        for (size_t i = 0; i < table.m_records.size(); ++i)
-        {
-            os << "Record #" << i << "\n";
-            const Record& record = table.m_records[i];
-            for (size_t j = 0; j < table.m_headers.size(); ++j)
-            {
-                os << "\t" << table.m_headers[j] << "=" << record.getString(j) << "\n";
-            }
-            os << "\n";
-        }
-        return os;
     }
+    os << std::string(columns * (width + 3) + 1, '-') << "\n";
+    return os;
+}
 
 }

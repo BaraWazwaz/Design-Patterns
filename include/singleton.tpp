@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Implementation of the @ref Singleton.hpp header for the @ref Singleton class.
- */
-
 #include "Singleton.hpp"
 
 namespace nitron
@@ -15,4 +10,4 @@ Singleton<T>::ValueType& Singleton<T>::get()
     return value;
 }
 
-} // namespace nitron
+}
