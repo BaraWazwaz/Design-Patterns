@@ -12,15 +12,15 @@ void runTests()
 
     Table table;
 
-    table.pushBackField("id", 0);
-    table.pushBackField("name", std::string("Anonymous"));
-    table.pushBackField("active", true);
+    table.emplaceBackField<int>("id", 0);
+    table.emplaceBackField<std::string>("name", "Anonymous");
+    table.emplaceBackField<bool>("active", true);
 
     Record record;
-    record.pushBackField(1);
-    record.pushBackField(std::string("Ahmad"));
-    record.pushBackField(true);
-    table.pushBackRecord(std::move(record));
+    record.emplaceBackField<int>(1);
+    record.emplaceBackField<std::string>(std::string("Ahmad"));
+    record.emplaceBackField<bool>(true);
+    table.emplaceBackRecord(std::move(record));
 
     std::cout << table << std::endl;
 

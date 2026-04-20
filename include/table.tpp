@@ -38,15 +38,16 @@ void DataHolder<Type>::setString(std::string const& string)
 }
 
 template <Streamable Type>
-Type const& DataHolder<Type>::get() const
+Type const& DataHolder<Type>::getValue() const
 {
     return m_data;
 }
 
 template <Streamable Type>
-void DataHolder<Type>::set(Type&& value)
+template <typename... Args>
+void DataHolder<Type>::setValue(Args&&... args)
 {
-    m_data = std::forward<Type>(value);
+    m_data = Type(std::forward<Type>(args)...);
 }
 
 template <Streamable Type>
@@ -55,90 +56,90 @@ DataHolder<Type>::DataHolder(Args&&... args)
     : m_data(std::forward<Args>(args)...)
 {}
 
-template <Streamable Type>
-void Record::pushBackField(Type&& value)
+template <Streamable Type, typename... Args>
+void Record::emplaceBackField(Args&&... args)
 {
     m_cells.emplace_back(
         std::make_unique<DataHolder<Type>>(
-            std::forward<Type>(value)
+            std::forward<Type>(args)...
         )
     );
 }
 
-template <Streamable Type>
-void Record::pushFrontField(Type&& value)
+template <Streamable Type, typename... Args>
+void Record::emplaceFrontField(Args&&... args)
 {
     m_cells.emplace_front(
         std::make_unique<DataHolder<Type>>(
-            std::forward<Type>(value)
+            std::forward<Type>(args)...
         )
     );
 }
 
-template <Streamable Type>
-void Record::insertField(size_t index, Type&& value)
+template <Streamable Type, typename... Args>
+void Record::insertField(size_t index, Args&&... args)
 {
     m_cells.emplace(m_cells.cbegin() + index,
         std::make_unique<DataHolder<Type>>(
-            std::forward<Type>(value)
+            std::forward<Type>(args)...
         )
     );
 }
 
 template <Streamable Type>
-Type const& Record::get(size_t index) const
+Type const& Record::getFieldValue(size_t index) const
 {
     IDataHolder const& cell = *m_cells.at(index);
     if (typeid(Type) != cell.getType())
     {
-        throw std::invalid_argument("type expected of field from Record::get<Type>() did not match type of data inside DataHolder");
+        throw std::invalid_argument("type expected of field from Record::getFieldValue<Type>() did not match type of data inside DataHolder");
     }
     DataHolder<Type> const& cellTyped = static_cast<DataHolder<Type> const&>(cell);
-    return cellTyped.get();
+    return cellTyped.getValue();
 }
 
-template <Streamable Type>
-void Record::set(size_t index, Type&& value)
+template <Streamable Type, typename... Args>
+void Record::setFieldValue(size_t index, Args&&... args)
 {
     IDataHolder const& cell = *m_cells.at(index);
     if (typeid(Type) != cell.getType())
     {
-        throw std::invalid_argument("type expected of field from Record::get<Type>() did not match type of data inside DataHolder");
+        throw std::invalid_argument("type expected of field from Record::setFieldValue<Type>() did not match type of data inside DataHolder");
     }
     DataHolder<Type> const& cellTyped = static_cast<DataHolder<Type> const&>(cell);
-    cellTyped.set(std::forward<Type>(value));
+    cellTyped.setValue(std::forward<Type>(args)...);
 }
 
-template <Streamable Type>
-void Table::pushBackField(std::string const& header, Type const& defaultValue)
+template <Streamable Type, typename... Args>
+void Table::emplaceBackField(std::string const& header, Args&&... args)
 {
     m_headers.emplace_back(header);
-    m_prototypes.pushBackField(Type(defaultValue));
+    m_prototypes.emplaceBackField<Type>(std::forward<Args>(args)...);
     for (Record& record : m_records)
     {
-        record.pushBackField(Type(defaultValue));
+        record.emplaceBackField<Type>(std::forward<Args>(args)...);
     }
 }
 
-template <Streamable Type>
-void Table::pushFrontField(std::string const& header, Type const& defaultValue)
+template <Streamable Type, typename... Args>
+void Table::emplaceFrontField(std::string const& header, Args&&... args)
 {
     m_headers.emplace_front(header);
-    m_prototypes.pushFrontField(Type(defaultValue));
+    m_prototypes.emplaceFrontField<Type>(std::forward<Args>(args)...);
     for (Record& record : m_records)
     {
-        record.pushFrontField(Type(defaultValue));
+        record.emplaceFrontField<Type>(std::forward<Args>(args)...);
     }
 }
 
-template <Streamable Type>
-void Table::insertField(size_t index, std::string const& header, Type const& defaultValue)
+template <Streamable Type, typename... Args>
+void Table::insertField(size_t index, std::string const& header, Args&&... args)
 {
     m_headers.emplace(m_headers.cbegin() + index, header);
-    m_prototypes.insertField(index, Type(defaultValue));
+    m_prototypes.insertField<Type>(index, std::forward<Args>(args)...);
     for (Record& record : m_records)
     {
-        record.insertField(index, Type(defaultValue));
+        record.insertField<Type>(index, std::forward<Args>(args)...);
     }
 }
 

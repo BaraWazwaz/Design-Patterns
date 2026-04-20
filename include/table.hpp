@@ -47,8 +47,9 @@ public:
     [[nodiscard]] std::string getString() const override;
     void setString(std::string const& string) override;
 
-    [[nodiscard]] Type const& get() const;
-    void set(Type&& value);
+    [[nodiscard]] Type const& getValue() const;
+    template <typename... Args>
+    void setValue(Args&&... args);
 
     template <typename... Args>
     explicit DataHolder(Args&&... args);
@@ -60,12 +61,12 @@ private:
 class Record
 {
 public:
-    template <Streamable Type>
-    void insertField(size_t index, Type&& value);
-    template <Streamable Type>
-    void pushBackField(Type&& value);
-    template <Streamable Type>
-    void pushFrontField(Type&& value);
+    template <Streamable Type, typename... Args>
+    void insertField(size_t index, Args&&... value);
+    template <Streamable Type, typename... Args>
+    void emplaceBackField(Args&&... args);
+    template <Streamable Type, typename... Args>
+    void emplaceFrontField(Args&&... args);
 
     void eraseField(size_t index);
     void popBackField();
@@ -75,12 +76,12 @@ public:
     [[nodiscard]] IDataHolder const& at(size_t index) const;
 
     template <Streamable Type>
-    [[nodiscard]] Type const& get(size_t index) const;
-    template <Streamable Type>
-    void set(size_t index, Type&& val);
+    [[nodiscard]] Type const& getFieldValue(size_t index) const;
+    template <Streamable Type, typename... Args>
+    void setFieldValue(size_t index, Args&&... args);
 
-    [[nodiscard]] std::string getString(size_t index) const;
-    void setString(size_t index, std::string const& value);
+    [[nodiscard]] std::string getFieldString(size_t index) const;
+    void setFieldString(size_t index, std::string const& value);
 
     [[nodiscard]] size_t degree() const;
     [[nodiscard]] size_t incompatability(Record const& record) const;
@@ -94,19 +95,19 @@ private:
 class Table
 {
 public:
-    template <Streamable Type>
-    void pushBackField(std::string const& header, Type const& defaultValue = Type());
-    template <Streamable Type>
-    void pushFrontField(std::string const& header, Type const& defaultValue = Type());
-    template <Streamable Type>
-    void insertField(size_t index, std::string const& header, Type const& defaultValue = Type());
+    template <Streamable Type, typename... Args>
+    void emplaceBackField(std::string const& header, Args&&... args);
+    template <Streamable Type, typename... Args>
+    void emplaceFrontField(std::string const& header, Args&&... args);
+    template <Streamable Type, typename... Args>
+    void insertField(size_t index, std::string const& header, Args&&... args);
 
     void popBackField();
     void popFrontField();
     void eraseField(size_t index);
 
-    void pushBackRecord(Record&& record);
-    void pushFrontRecord(Record&& record);
+    void emplaceBackRecord(Record&& record);
+    void emplaceFrontRecord(Record&& record);
     void insertRecord(size_t index, Record&& record);
 
     void popBackRecord();

@@ -28,13 +28,13 @@ IDataHolder const& Record::at(size_t index) const
     return *m_cells.at(index);
 }
 
-std::string Record::getString(size_t index) const
+std::string Record::getFieldString(size_t index) const
 {
     IDataHolder const& cell = *m_cells.at(index);
     return cell.getString();
 }
 
-void Record::setString(size_t index, std::string const& value)
+void Record::setFieldString(size_t index, std::string const& value)
 {
     IDataHolder& cell = *m_cells.at(index);
     cell.setString(value);
@@ -92,13 +92,13 @@ void Table::eraseField(size_t index)
     }
 }
 
-void Table::pushBackRecord(Record&& record)
+void Table::emplaceBackRecord(Record&& record)
 {
     assertCompatibility(record);
     m_records.emplace_back(std::forward<Record>(record));
 }
 
-void Table::pushFrontRecord(Record&& record)
+void Table::emplaceFrontRecord(Record&& record)
 {
     assertCompatibility(record);
     m_records.emplace_front(std::forward<Record>(record));
@@ -162,11 +162,11 @@ void Table::assertCompatibility(Record const& record) const
     {
         if (mismatch == Record::SIZE_MISMATCH)
         {
-            throw std::invalid_argument("could not Table::pushBackRecord() a Record of a different degree.");
+            throw std::invalid_argument("could not Table::assertCompatibility() a Record of a different degree.");
         }
         else
         {
-            throw std::invalid_argument("could not Table::pushBackRecord() a Record of an incompatible corresponding value");
+            throw std::invalid_argument("could not Table::assertCompatibility() a Record of an incompatible corresponding value");
         }
     }
 }
@@ -204,7 +204,7 @@ std::ostream& operator<<(std::ostream& os, const Table& table)
         for (size_t column = 0; column < columns; ++column)
         {
             std::string& cell = data[row * columns + column];
-            cell = record.getString(column);
+            cell = record.getFieldString(column);
             clip(cell);
         }
     }
