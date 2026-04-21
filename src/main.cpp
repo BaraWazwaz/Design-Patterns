@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
-#include <Table.hpp>
+#include "Table.hpp"
+#include "Promise.hpp"
 #include "tests/Spec.hpp"
 
 void runTests()
@@ -9,6 +10,7 @@ void runTests()
     using nitron::Test;
     using nitron::Record;
     using nitron::Table;
+    using Promise = nitron::Promise<long long>;
 
     Spec main ("Main");
     
@@ -42,13 +44,28 @@ void runTests()
             },
             "nitron::Table can recieve records and output it correctly."
         ))
+    .closeSubSpec()
+    .openSubSpec("nitron::Promise")
+        .addTest(Test::checkReturnValue<long long>(
+            []() {
+                Promise p (std::plus<long long>(), 4LL, 7LL);
+                return p.get();
+            },
+            [](long long const& x) { return x == 11; },
+            "nitron::Promise<long long> should resolve on get()"
+        ))
     .closeSubSpec();
     
     main.state(std::cout);
 }
 
+void experimenting()
+{
+}
+
 int main()
 {
+    experimenting();
     runTests();
     return 0;
 }
