@@ -12,16 +12,7 @@ template <typename ResultType>
 class Promise
 {
 public:
-    enum struct Status { PENDING, SUCCEED, FAILED, USED, ABORTED };
-
-    struct promise_aborted : std::runtime_error
-    {
-        promise_aborted();
-    };
-    struct promise_used : std::runtime_error
-    {
-        promise_used();
-    };
+    enum struct Status { PENDING, SUCCEED, FAILED };
 
     template <typename Functor, typename... Args>
     requires std::invocable<Functor, Args...>
@@ -35,12 +26,7 @@ public:
     bool succeed() const;
     bool failed();
     bool failed() const;
-    bool used();
-    bool used() const;
-    bool aborted();
-    bool aborted() const;
 
-    void abort();
     ResultType get();
 
     /// @brief this method is incomplete
@@ -51,12 +37,12 @@ public:
     /// @brief this method is incomplete
     template <typename NextType, typename Functor>
     requires std::invocable<Functor, std::exception_ptr>
-    void except(Functor functor);
+    Promise<NextType> except(Functor functor);
 
 private:
-    void block();
+    void blockAndEvaluate();
     std::recursive_mutex mtx;
-    std::future<ResultType> future;
+    std::shared_future<ResultType> future;
     std::optional<ResultType> result;
     std::optional<std::exception_ptr> exception;
     Status status = Status::PENDING;
