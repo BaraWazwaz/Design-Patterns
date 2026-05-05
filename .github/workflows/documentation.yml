@@ -30,4 +30,4 @@ jobs:
           branch: gh-pages
           folder: docs/output/html
           target-folder: ${{ github.ref_name }}
-          clean: false # Do not wipe other branches' docs
+          clean: false

@@ -1,8 +1,31 @@
-# Design Patterns Table Implementation
+# Design Patterns
 
-This project implements a dynamic `Table` data structure in C++20, demonstrating Design Patterns such as Factory and Singleton (via concepts). It uses type erasure `IValue` to handle heterogeneous data types safe and effectively.
+This project implements several real-world dependencies in C++ for the purpose of learning how they work internally and make them applicable in C++.
 
-## Github Actions' Notes for Future Reference
+# Headers
+
+## `tests/`
+- `Spec`
+  - Description: a JS-`jasmine`-like TDD `spec` support
+  - Design Patterns: Composition
+  - Future Improvements: More JS-like `jasmine` `spec` functionality support
+
+## _Uncategorized_
+- `Table`
+  - Description: a deque of a `Record` with runtime determined structure
+  - Design Patterns: Factory, Prototype
+  - Future Improvements: Making a more SQL-DB based Table
+- `Singleton<T>`
+  - Description: a single construction based Singleton wrapper
+  - Design Patterns: Singleton
+  - Future Improvements: Thread safety
+- `Promise<T>`
+  - Description: a JS-like `Promise<T>` class that wraps `std::future`
+  - Design Patterns: _no idea tbh_
+  - Future Improvements: More JS-like `Promise<T>` functionality support
+
+# DevOps Notes (for myself)
+## Github Actions
 
 ### Concept
 **Continuous Integration (CI) and Continuous Deployment (CD)** are practices that automate the integration of code changes and the delivery of software.
@@ -45,4 +68,3 @@ To enable this automation for your repository:
     *   Set **Source** to `Deploy from a branch`.
     *   Set **Branch** to `gh-pages` and folder to `/ (root)`.
 6.  Click **Save**.
-7.  
