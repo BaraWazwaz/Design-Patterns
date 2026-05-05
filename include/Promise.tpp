@@ -6,16 +6,18 @@ namespace nitron
 
 template <typename ResultType>
 template <typename Functor, typename... Args>
-requires std::invocable<Functor, Args...>
-Promise<ResultType>::Promise(Functor functor, Args... args) :
-    future(std::async(std::launch::async, functor, args...))
+requires LooseFunctor<Functor, ResultType, Args...>
+Promise<ResultType>::Promise(Functor&& functor, Args&&... args) :
+    future(std::async(std::launch::async,
+                      std::forward<Functor>(functor), 
+                      std::forward<Args>(args)...))
 {}
 
 template <typename ResultType>
-Promise<ResultType>::Status Promise<ResultType>::getStatus()
+Promise<ResultType>::Status Promise<ResultType>::getStatus() const
 {
-    std::lock_guard<std::recursive_mutex> lock (mtx);
-    if (status == Status::PENDING && future.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
+    if (status == Status::PENDING &&
+        future.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
     {
         blockAndEvaluate();
     }
@@ -23,17 +25,12 @@ Promise<ResultType>::Status Promise<ResultType>::getStatus()
 }
 
 template <typename ResultType>
-Promise<ResultType>::Status Promise<ResultType>::getStatus() const
+ResultType Promise<ResultType>::get() const
 {
-    std::lock_guard<std::recursive_mutex> lock (mtx);
-    return status;
-}
-
-template <typename ResultType>
-ResultType Promise<ResultType>::get()
-{
-    std::lock_guard<std::recursive_mutex> lock (mtx);
-    blockAndEvaluate();
+    if (status == Status::PENDING)
+    {
+        blockAndEvaluate();
+    }
     if (status == Status::FAILED)
     {
         std::rethrow_exception(exception.value());
@@ -42,83 +39,74 @@ ResultType Promise<ResultType>::get()
 }
 
 template <typename ResultType>
-bool Promise<ResultType>::pending()
-{
-    std::lock_guard<std::recursive_mutex> lock (mtx);
-    return getStatus() == Status::PENDING;
-}
-
-template <typename ResultType>
 bool Promise<ResultType>::pending() const
 {
-    std::lock_guard<std::recursive_mutex> lock (mtx);
-    return status == Status::PENDING;
-}
-
-template <typename ResultType>
-bool Promise<ResultType>::succeed()
-{
-    std::lock_guard<std::recursive_mutex> lock (mtx);
-    return getStatus() == Status::SUCCEED;
+    return getStatus() == Status::PENDING;
 }
 
 template <typename ResultType>
 bool Promise<ResultType>::succeed() const
 {
-    std::lock_guard<std::recursive_mutex> lock (mtx);
-    return status == Status::SUCCEED;
-}
-
-template <typename ResultType>
-bool Promise<ResultType>::failed()
-{
-    std::lock_guard<std::recursive_mutex> lock (mtx);
-    return getStatus() == Status::FAILED;
+    return getStatus() == Status::SUCCEEDED;
 }
 
 template <typename ResultType>
 bool Promise<ResultType>::failed() const
 {
-    std::lock_guard<std::recursive_mutex> lock (mtx);
-    return status == Status::FAILED;
+    return getStatus() == Status::FAILED;
 }
 
 template <typename ResultType>
-template <typename NextType, typename Functor>
-requires std::invocable<Functor, ResultType>
-Promise<NextType> Promise<ResultType>::then(Functor functor)
+template <typename NextType, typename Functor, typename... Args>
+requires LooseFunctor<Functor, NextType, ResultType, Args...>
+Promise<NextType>
+Promise<ResultType>::then(Functor&& functor,
+                          Args&&... args) const
 {
     return Promise<NextType>(
-        [future, functor = std::move(functor)]() mutable -> NextType {
-            return functor(future.get());
+        [parent = std::make_shared<Promise<ResultType>>(*this),
+         functorCaptured = std::forward<Functor>(functor),
+         ...argsCaptured = std::forward<Args>(args)]() mutable -> NextType
+        {
+            return functorCaptured(parent->get(),
+                                   std::forward<Args>(argsCaptured)...);
         }
     );
 }
 
 template <typename ResultType>
-template <typename NextType, typename Functor>
-requires std::invocable<Functor, std::exception_ptr>
-Promise<NextType> Promise<ResultType>::except(Functor functor)
+template <typename ExceptionType, typename Functor, typename... Args>
+requires LooseFunctor<Functor, ResultType, ExceptionType, Args...>
+Promise<ResultType>
+Promise<ResultType>::except(Functor&& functor,
+                            Args&&... args) const
 {
-    return Promise<NextType>(
-        [future, functor = std::move(functor)]() mutable -> NextType {
+    return Promise<ResultType>(
+        [parent = std::make_shared<Promise<ResultType>>(*this),
+         functorCaptured = std::forward<Functor>(functor),
+         ...argsCaptured = std::forward<Args>(args)]() mutable -> ResultType
+        {
             try
             {
-                future.get();
+                return parent->get();
+            }
+            catch (ExceptionType const& exception)
+            {
+                return functorCaptured(std::forward<ExceptionType>(exception),
+                                       std::forward<Args>(argsCaptured)...);
             }
             catch (...)
             {
-                functor(std::current_exception());
+                throw;
             }
-            return {};
         }
     );
 }
 
 template <typename ResultType>
-void Promise<ResultType>::blockAndEvaluate()
+void Promise<ResultType>::blockAndEvaluate() const
 {
-    std::lock_guard<std::recursive_mutex> lock (mtx);
+    std::lock_guard<std::mutex> lock (mutex);
     if (status != Status::PENDING)
     {
         return;
@@ -126,11 +114,11 @@ void Promise<ResultType>::blockAndEvaluate()
     try
     {
         result = future.get();
-        status = Status::SUCCEED;
+        status = Status::SUCCEEDED;
     }
-    catch(std::exception const& e)
+    catch(...)
     {
-        exception = std::make_exception_ptr(e);
+        exception = std::current_exception();
         status = Status::FAILED;
     }
 }

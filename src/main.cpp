@@ -10,7 +10,7 @@ void runTests()
     using nitron::Test;
     using nitron::Record;
     using nitron::Table;
-    using Promise = nitron::Promise<long long>;
+    using Promise = nitron::Promise<int>;
 
     Spec main ("Main");
     
@@ -46,26 +46,40 @@ void runTests()
         ))
     .closeSubSpec()
     .openSubSpec("nitron::Promise")
-        .addTest(Test::checkReturnValue<long long>(
+        .addTest(Test::checkReturnValue<int>(
             []() {
-                Promise p (std::plus<long long>(), 4LL, 7LL);
+                Promise p (std::plus<int>(), 4, 7);
                 return p.get();
             },
             [](long long const& x) { return x == 11; },
             "nitron::Promise<long long> should resolve on get()"
+        ))
+        .addTest(Test::checkThrowType<std::runtime_error>(
+            []() {
+                Promise p ([](){
+                    throw std::runtime_error("Hello");
+                    return 0;
+                });
+                p.get();
+            },
+            "nitron::Promise<long long> should receive a thrown std::runtime_error on get()"
         ))
     .closeSubSpec();
     
     main.state(std::cout);
 }
 
-void experimenting()
+int experimenting()
 {
+    return 0;
 }
 
 int main()
 {
-    experimenting();
-    runTests();
+    int status = experimenting();
+    if (status != 0)
+        return status;
+    else
+        runTests();
     return 0;
 }

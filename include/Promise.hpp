@@ -1,51 +1,62 @@
 #pragma once
+#include <type_traits>
 #include <thread>
 #include <future>
 #include <optional>
-#include <exception>
 #include <mutex>
+#include <utility>
+#include <chrono>
 
 namespace nitron
 {
+
+template <typename Functor, typename Result, typename... Args>
+concept LooseFunctor = std::invocable<Functor, Args...> &&
+                        std::convertible_to<std::invoke_result_t<Functor, Args...>, Result>;
 
 template <typename ResultType>
 class Promise
 {
 public:
-    enum struct Status { PENDING, SUCCEED, FAILED };
+    enum struct Status { PENDING, SUCCEEDED, FAILED };
 
+    /// @brief construction using async function and arguments
     template <typename Functor, typename... Args>
-    requires std::invocable<Functor, Args...>
-    Promise(Functor functor, Args... args);
-
-    Status getStatus();
-    Status getStatus() const;
-    bool pending();
-    bool pending() const;
-    bool succeed();
-    bool succeed() const;
-    bool failed();
-    bool failed() const;
-
-    ResultType get();
-
-    /// @brief this method is incomplete
-    template <typename NextType, typename Functor>
-    requires std::invocable<Functor, ResultType>
-    Promise<NextType> then(Functor functor);
+    requires LooseFunctor<Functor, ResultType, Args...>
+    Promise(Functor&& functor,
+            Args&&... args);
+        
+    inline Status getStatus() const;
+    inline bool   pending()   const;
+    inline bool   succeed()   const;
+    inline bool   failed()    const;
     
-    /// @brief this method is incomplete
-    template <typename NextType, typename Functor>
-    requires std::invocable<Functor, std::exception_ptr>
-    Promise<NextType> except(Functor functor);
+    /// @brief get the value of promise result
+    inline ResultType get() const;
+    
+    /// @brief chain a follow-up promise
+    template <typename NextType, typename Functor, typename... Args>
+    requires LooseFunctor<Functor, NextType, ResultType, Args...>
+    Promise<NextType>
+    then(Functor&& functor,
+         Args&&... args) const;
+    
+    /// @brief chain a fallback promise
+    template <typename ExceptionType, typename Functor, typename... Args>
+    requires LooseFunctor<Functor, ResultType, ExceptionType, Args...>
+    Promise<ResultType>
+    except(Functor&& functor,
+           Args&&... args) const;
 
 private:
-    void blockAndEvaluate();
-    std::recursive_mutex mtx;
-    std::shared_future<ResultType> future;
-    std::optional<ResultType> result;
-    std::optional<std::exception_ptr> exception;
-    Status status = Status::PENDING;
+    /// @brief make sure the promise is fully executed
+    void blockAndEvaluate() const;
+    
+    mutable Status status = Status::PENDING;
+    mutable std::future<ResultType> future;
+    mutable std::optional<ResultType> result;
+    mutable std::optional<std::exception_ptr> exception;
+    mutable std::mutex mutex;
 };
 
 } // namespace nitron
