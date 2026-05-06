@@ -1,4 +1,7 @@
 #pragma once
+
+#include <chrono>      // std::chrono::seconds
+#include <memory>      // std::make_shared
 #include "Promise.hpp"
 
 namespace nitron

@@ -1,3 +1,4 @@
+#include <iomanip>
 #include "Table.hpp"
 
 namespace nitron
@@ -28,13 +29,13 @@ IDataHolder const& Record::at(size_t index) const
     return *m_cells.at(index);
 }
 
-std::string Record::getFieldString(size_t index) const
+std::string Record::getStringAt(size_t index) const
 {
     IDataHolder const& cell = *m_cells.at(index);
     return cell.getString();
 }
 
-void Record::setFieldString(size_t index, std::string const& value)
+void Record::setStringAt(size_t index, std::string const& value)
 {
     IDataHolder& cell = *m_cells.at(index);
     cell.setString(value);
@@ -204,7 +205,7 @@ std::ostream& operator<<(std::ostream& os, const Table& table)
         for (size_t column = 0; column < columns; ++column)
         {
             std::string& cell = data[row * columns + column];
-            cell = record.getFieldString(column);
+            cell = record.getStringAt(column);
             clip(cell);
         }
     }

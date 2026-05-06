@@ -87,24 +87,24 @@ void Record::insertField(size_t index, Args&&... args)
 }
 
 template <Streamable Type>
-Type const& Record::getFieldValue(size_t index) const
+Type const& Record::getValueAt(size_t index) const
 {
     IDataHolder const& cell = *m_cells.at(index);
     if (typeid(Type) != cell.getType())
     {
-        throw std::invalid_argument("type expected of field from Record::getFieldValue<Type>() did not match type of data inside DataHolder");
+        throw std::invalid_argument("type expected of field from Record::getValueAt<Type>() did not match type of data inside DataHolder");
     }
     DataHolder<Type> const& cellTyped = static_cast<DataHolder<Type> const&>(cell);
     return cellTyped.getValue();
 }
 
 template <Streamable Type, typename... Args>
-void Record::setFieldValue(size_t index, Args&&... args)
+void Record::setValueAt(size_t index, Args&&... args)
 {
     IDataHolder const& cell = *m_cells.at(index);
     if (typeid(Type) != cell.getType())
     {
-        throw std::invalid_argument("type expected of field from Record::setFieldValue<Type>() did not match type of data inside DataHolder");
+        throw std::invalid_argument("type expected of field from Record::setValueAt<Type>() did not match type of data inside DataHolder");
     }
     DataHolder<Type> const& cellTyped = static_cast<DataHolder<Type> const&>(cell);
     cellTyped.setValue(std::forward<Type>(args)...);

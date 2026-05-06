@@ -1,13 +1,19 @@
+#pragma once
+
 #include "Singleton.hpp"
 
 namespace nitron
 {
 
-template <typename T>
-Singleton<T>::ValueType& Singleton<T>::get()
-{
+template <typename ValueType>
+Singleton<ValueType>::AccessToken Singleton<ValueType>::get() {
     static ValueType value;
-    return value;
+    static std::mutex mutex;
+    return AccessToken(
+        std::piecewise_construct,
+        std::forward_as_tuple(value),
+        std::forward_as_tuple(mutex)
+    );
 }
 
 }

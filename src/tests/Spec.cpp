@@ -3,27 +3,27 @@
 namespace nitron
 {
 
-bool Test::state(std::ostream& os, std::size_t tabs)
+bool Test::displayResult(std::ostream& os, std::size_t tabs) const
 {
     if (verdict)
-        os << std::string(tabs, '\t') << "[Passed]: { " << message << " }\n";
+        os << std::string(tabs, '\t') << "[Passed]: { " << description << " }\n";
     else
-        os << std::string(tabs, '\t') << "[Failed]: { " << message << " }\n";
+        os << std::string(tabs, '\t') << "[Failed]: { " << description << " }\n";
     return verdict;
 }
 
-Test::Test(bool verdict, const std::string& message) :
-verdict(verdict),
-    message(message)
+Test::Test(bool verdict, std::string&& description) :
+    verdict(verdict),
+    description(std::forward<std::string>(description))
 {}
 
-Spec::Spec(const std::string& title) :
-    title(title)
+Spec::Spec(std::string&& title) :
+    title(std::forward<std::string>(title))
 {}
 
-Spec& Spec::openSubSpec(const std::string& title)
+Spec& Spec::openSubSpec(std::string&& title)
 {
-    children.emplace_back(title);
+    children.emplace_back(std::forward<std::string>(title));
     children.back().parent = this;
     return children.back();
 }
@@ -35,63 +35,61 @@ Spec& Spec::closeSubSpec()
 
 Spec& Spec::addTest(Test&& test)
 {
-    direct.emplace_back(test);
+    direct.emplace_back(std::forward<Test>(test));
     return *this;
 }
 
-bool Spec::state(std::ostream& os, std::size_t tabs)
+bool Spec::displayResult(std::ostream& os, std::size_t tabs) const
 {
     bool verdict = true;
     os << std::string(tabs, '\t') << "Spec { " << title << " } :\n";
     
-    for (auto& test : direct)
+    for (Test const& test : direct)
     {
-        verdict = test.state(os, tabs + 1) && verdict;
+        verdict = test.displayResult(os, tabs + 1) && verdict;
     }
     
-    os << std::string(tabs + 1, '\t') << "-------------------\n";
-    for (auto& spec : children)
+    os << std::string(tabs, '\t') << "-------------------\n";
+    for (Spec const& spec : children)
     {
-        verdict = spec.state(os, tabs + 1) && verdict;
-        os << std::string(tabs + 1, '\t') << "-------------------\n";
+        verdict = spec.displayResult(os, tabs + 1) && verdict;
+        os << std::string(tabs, '\t') << "-------------------\n";
     }
 
     if (verdict)
     {
-        os << std::string(tabs + 1, '\t') << "Verdict: [Passed]\n";
+        os << std::string(tabs, '\t') << "Verdict: [Passed]\n";
     }
     else
     {
-        os << std::string(tabs + 1, '\t') << "Verdict: [Failed]\n";
+        os << std::string(tabs, '\t') << "Verdict: [Failed]\n";
     }
-    os << std::string(tabs + 1, '\t') << "===================\n";
+    os << std::string(tabs, '\t') << "===================\n";
 
     return verdict;
 }
 
-Test Test::toPass() &
+Test Test::expectedToPass() &
 {
     Test copy = *this;
     return copy;
 }
 
-Test Test::toPass() &&
+Test Test::expectedToPass() &&
 {
-    return Test(verdict, std::move(message));
+    return Test(verdict, std::move(description));
 }
 
-Test Test::toFail() &
+Test Test::expectedToFail() &
 {
     Test copy = *this;
     copy.verdict = !copy.verdict;
     return copy;
 }
 
-Test Test::toFail() &&
+Test Test::expectedToFail() &&
 {
-    return Test(!verdict, std::move(message));
+    return Test(!verdict, std::move(description));
 }
-
-
 
 } // namespace nitron

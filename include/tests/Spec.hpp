@@ -1,9 +1,14 @@
+/**
+ * @file Spec.hpp
+ * @brief implements JS-jasmine-like spec suite using @ref Test and @ref Spec classes
+ * @copyright 2026 Bara Wazwaz. Released under the [GNU License](/.github/LICENSE)
+ */
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <functional>
+#include <iostream>    // std::ostream
+#include <string>      // std::string
+#include <vector>      // std::vector
+#include "Functor.hpp" // nitron::LooseFunctor
 
 namespace nitron
 {
@@ -11,34 +16,42 @@ namespace nitron
 class Test
 {
 public:
+    /// @brief check if the function provided throws a value of expected type
+    template <typename T, typename FunctorTested>
+    requires LooseFunctor<FunctorTested, void>
+    static Test throwsValueOfType(FunctorTested&& function,
+                                  std::string&& description = "[No Description]");
 
-    template <typename T>
-    static Test checkThrowType(const std::function<void()>& function,
-                               const std::string& message = "[No Message]");
+    /// @brief check if the function provided throws a value that passes provided checker
+    template <typename T, typename FunctorTested, typename FunctorChecker>
+    requires LooseFunctor<FunctorTested, void> &&
+             LooseFunctor<FunctorChecker, bool, T>
+    static Test throwsValue(FunctorTested&& function,
+                            FunctorChecker&& checker,
+                            std::string&& description = "[No Description]");
 
-    template <typename T>
-    static Test checkThrowValue(const std::function<void()>& function,
-                                std::function<bool(const T&)> checker,
-                                const std::string& message = "[No Message]");
+    /// @brief check if the function provided returns a value the passes provided checker
+    template <typename T, typename FunctorTested, typename FunctorChecker>
+    requires LooseFunctor<FunctorTested, T> &&
+             LooseFunctor<FunctorChecker, bool, T>
+    static Test returnsValue(FunctorTested&& function,
+                             FunctorChecker&& checker,
+                             std::string&& description = "[No Description]");
 
-    template <typename T>
-    static Test checkReturnValue(const std::function<T()>& function,
-                                 std::function<bool(T)> checker,
-                                 const std::string& message = "[No Message]");
+    /// @brief output testing verdict information
+    /// @param tabs number of `"\t"` characters used in indentation
+    bool displayResult(std::ostream& os, std::size_t tabs = 0) const;
 
-    bool state(std::ostream& os, std::size_t tabs = 0);
-
-    Test toPass() &;
-    Test toPass() &&;
-    Test toFail() &;
-    Test toFail() &&;
+    Test expectedToPass() &;
+    Test expectedToPass() &&;
+    Test expectedToFail() &;
+    Test expectedToFail() &&;
 
 private:
     bool verdict;
-    std::string message = "[No Message]";
+    std::string description = "[No Description]";
 
-    Test() = delete;
-    Test(bool verdict, const std::string& message);
+    Test(bool verdict, std::string&& description);
 };
 
 class Spec
@@ -46,16 +59,17 @@ class Spec
 public:
 
     Spec() = default;
-    Spec(const std::string& title);
+    Spec(std::string&& title);
 
     Spec& closeSubSpec();
-    Spec& openSubSpec(const std::string& title);
+    Spec& openSubSpec(std::string&& title);
     Spec& addTest(Test&& test);
 
-    bool state(std::ostream& os, std::size_t tabs = 0);
+    /// @brief output testing verdict information
+    /// @param tabs number of `"\t"` characters used in indentation
+    bool displayResult(std::ostream& os, std::size_t tabs = 0) const;
 
 private:
-
     std::string title = "Untitled";
     Spec* parent = this;
     std::vector<Test> direct;

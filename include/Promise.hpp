@@ -1,18 +1,18 @@
+/**
+ * @file Promise.hpp
+ * @brief implements the JS-like @ref Promise class
+ * @copyright 2026 Bara Wazwaz. Released under the [GNU License](/.github/LICENSE)
+ */
 #pragma once
-#include <type_traits>
-#include <thread>
-#include <future>
-#include <optional>
-#include <mutex>
-#include <utility>
-#include <chrono>
+
+#include <future>      // std::future, std::async
+#include <optional>    // std::optional
+#include <exception>   // std::exception_ptr, std::current_exception, std::rethrow_exception
+#include <mutex>       // std::mutex, std::lock_guard
+#include "Functor.hpp" // nitron::LooseFunctor
 
 namespace nitron
 {
-
-template <typename Functor, typename Result, typename... Args>
-concept LooseFunctor = std::invocable<Functor, Args...> &&
-                        std::convertible_to<std::invoke_result_t<Functor, Args...>, Result>;
 
 template <typename ResultType>
 class Promise

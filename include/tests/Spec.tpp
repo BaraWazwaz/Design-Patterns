@@ -3,38 +3,43 @@
 namespace nitron
 {
 
-template <typename T>
-Test Test::checkThrowType(const std::function<void()>& function,
-                          const std::string& message)
+template <typename T, typename FunctorTested>
+requires LooseFunctor<FunctorTested, void>
+Test Test::throwsValueOfType(FunctorTested&& function,
+                             std::string&& description)
 {
     bool verdict = false;
     try { function(); }
-    catch(const T& x) { verdict = true; }
+    catch(T const&) { verdict = true; }
     catch(...) {}
-    return Test(verdict, message);
+    return Test(verdict, std::forward<std::string>(description));
 }
 
-template <typename T>
-Test Test::checkThrowValue(const std::function<void()>& function,
-                           std::function<bool(const T&)> checker,
-                           const std::string& message)
+template <typename T, typename FunctorTested, typename FunctorChecker>
+requires LooseFunctor<FunctorTested, void> &&
+         LooseFunctor<FunctorChecker, bool, T>
+Test Test::throwsValue(FunctorTested&& function,
+                       FunctorChecker&& checker,
+                       std::string&& description)
 {
     bool verdict = false;
     try { function(); }
-    catch(const T& x) { verdict = checker(x); }
+    catch(T const& x) { verdict = checker(x); }
     catch(...) {}
-    return Test(verdict, message);
+    return Test(verdict, std::forward<std::string>(description));
 }
 
-template <typename T>
-Test Test::checkReturnValue(const std::function<T()>& function,
-                             std::function<bool(T)> checker,
-                             const std::string& message)
+template <typename T, typename FunctorTested, typename FunctorChecker>
+requires LooseFunctor<FunctorTested, T> &&
+         LooseFunctor<FunctorChecker, bool, T>
+Test Test::returnsValue(FunctorTested&& function,
+                        FunctorChecker&& checker,
+                        std::string&& description)
 {
     bool verdict = false;
     try { verdict = checker(function()); }
     catch(...) {}
-    return Test(verdict, message);
+    return Test(verdict, std::forward<std::string>(description));
 }
 
 } // namespace nitron

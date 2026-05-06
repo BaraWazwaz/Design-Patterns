@@ -16,7 +16,7 @@ void runTests()
     
     main
     .openSubSpec("nitron::Table")
-        .addTest(Test::checkReturnValue<std::string>(
+        .addTest(Test::returnsValue<std::string>(
             []() -> std::string {
                 Table table;
 
@@ -46,7 +46,7 @@ void runTests()
         ))
     .closeSubSpec()
     .openSubSpec("nitron::Promise")
-        .addTest(Test::checkReturnValue<int>(
+        .addTest(Test::returnsValue<int>(
             []() {
                 Promise p (std::plus<int>(), 4, 7);
                 return p.get();
@@ -54,7 +54,7 @@ void runTests()
             [](long long const& x) { return x == 11; },
             "nitron::Promise<long long> should resolve on get()"
         ))
-        .addTest(Test::checkThrowType<std::runtime_error>(
+        .addTest(Test::throwsValueOfType<std::runtime_error>(
             []() {
                 Promise p ([](){
                     throw std::runtime_error("Hello");
@@ -66,7 +66,7 @@ void runTests()
         ))
     .closeSubSpec();
     
-    main.state(std::cout);
+    main.displayResult(std::cout);
 }
 
 int experimenting()
