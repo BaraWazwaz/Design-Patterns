@@ -1,7 +1,0 @@
-<map id="nitron::Value&lt; Type &gt;" name="nitron::Value&lt; Type &gt;">
-<area shape="rect" id="Node000001" title="Concrete template implementation of IValue." alt="" coords="31,213,187,399"/>
-<area shape="rect" id="Node000002" href="$d3/d57/classnitron_1_1IValue.html" title="Interface for type&#45;erased value wrappers." alt="" coords="5,5,113,151"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,164,91,213,86,214,75,165"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="137,45,181,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="155,112,135,198,130,197,150,111"/>
-</map>
