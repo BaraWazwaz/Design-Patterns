@@ -1,7 +1,7 @@
 /**
  * @file Singleton.hpp
  * @brief implements the @ref Singleton class
- * @copyright 2026 Bara Wazwaz. Released under the [GNU License](/.github/LICENSE)
+ * @copyright 2026 Bara Wazwaz. Released under the GNU License
  */
 #pragma once
 

@@ -1,7 +1,7 @@
 /**
  * @file Table.hpp
  * @brief implements @ref Table class that holds data in a serializable wrapper
- * @copyright 2026 Bara Wazwaz. Released under the [GNU License](/.github/LICENSE)
+ * @copyright 2026 Bara Wazwaz. Released under the GNU License
  */
 #pragma once
 
