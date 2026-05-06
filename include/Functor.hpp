@@ -1,3 +1,8 @@
+/**
+ * @file Functor.hpp
+ * @brief implements some Functor concepts
+ * @copyright 2026 Bara Wazwaz. Released under the GNU License
+ */
 #pragma once
 
 #include <concepts> // std::is_invocable_r_v, std::invocable, std::invoke_result_t, std::convertible_to
