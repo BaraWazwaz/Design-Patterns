@@ -98,26 +98,31 @@ $(document).ready(function(){initNavTree('da/d81/Functor_8hpp_source.html','../.
   <div class="headertitle"><div class="title">Functor.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="../../da/d81/Functor_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;concepts&gt;</span> <span class="comment">// std::is_invocable_r_v, std::invocable, std::invoke_result_t, std::convertible_to</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="foldopen" id="foldopen00005" data-start="{" data-end="}">
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno"><a class="line" href="../../de/d94/namespacenitron.html">    5</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../de/d94/namespacenitron.html">nitron</a></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>{</div>
+<a href="../../da/d81/Functor_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/**</span></div>
+<div class="line"><span class="lineno">    2</span><span class="comment"> * @file Functor.hpp</span></div>
+<div class="line"><span class="lineno">    3</span><span class="comment"> * @brief implements some Functor concepts</span></div>
+<div class="line"><span class="lineno">    4</span><span class="comment"> * @copyright 2026 Bara Wazwaz. Released under the GNU License</span></div>
+<div class="line"><span class="lineno">    5</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#</span><span class="preprocessor">pragma</span> <span class="preprocessor">once</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Functor, <span class="keyword">typename</span> Result, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="../../d4/d90/conceptnitron_1_1StrictFunctor.html">   11</a></span><span class="keyword">concept </span><a class="code hl_concept" href="../../d4/d90/conceptnitron_1_1StrictFunctor.html">StrictFunctor</a> = std::is_invocable_r_v&lt;Result, Functor, Args...&gt;;</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">concepts</span><span class="preprocessor">&gt;</span> <span class="comment">// std::is_invocable_r_v, std::invocable, std::invoke_result_t, std::convertible_to</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="../../de/d94/namespacenitron.html">   10</a></span><span class="keyword">namespace</span> <a class="code hl_namespace" href="../../de/d94/namespacenitron.html">nitron</a></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>{</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">/// @brief checks if class is a functor that takes some argument list </span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">///        and its return value is exactly expected type</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Functor, <span class="keyword">typename</span> Result, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="../../d3/d47/conceptnitron_1_1LooseFunctor.html">   16</a></span><span class="keyword">concept </span><a class="code hl_concept" href="../../d3/d47/conceptnitron_1_1LooseFunctor.html">LooseFunctor</a> = std::invocable&lt;Functor, Args...&gt; &amp;&amp;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>                       std::convertible_to&lt;std::invoke_result_t&lt;Functor, Args...&gt;, Result&gt;;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>} <span class="comment">// namespace nitron</span></div>
-</div>
-<div class="ttc" id="aconceptnitron_1_1LooseFunctor_html"><div class="ttname"><a href="../../d3/d47/conceptnitron_1_1LooseFunctor.html">nitron::LooseFunctor</a></div><div class="ttdoc">checks if class is a functor that takes some argument list and its return value is convertible to exp...</div><div class="ttdef"><b>Definition</b> Functor.hpp:16</div></div>
-<div class="ttc" id="aconceptnitron_1_1StrictFunctor_html"><div class="ttname"><a href="../../d4/d90/conceptnitron_1_1StrictFunctor.html">nitron::StrictFunctor</a></div><div class="ttdoc">checks if class is a functor that takes some argument list and its return value is exactly expected t...</div><div class="ttdef"><b>Definition</b> Functor.hpp:11</div></div>
-<div class="ttc" id="anamespacenitron_html"><div class="ttname"><a href="../../de/d94/namespacenitron.html">nitron</a></div><div class="ttdef"><b>Definition</b> Functor.hpp:6</div></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="../../d4/d90/conceptnitron_1_1StrictFunctor.html">   16</a></span><span class="keyword">concept</span> StrictFunctor = std::is_invocable_r_v&lt;Result, Functor, Args...&gt;;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">/// @brief checks if class is a functor that takes some argument list </span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">///        and its return value is convertible to expected type</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Functor, <span class="keyword">typename</span> Result, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="../../d3/d47/conceptnitron_1_1LooseFunctor.html">   21</a></span><span class="keyword">concept</span> LooseFunctor = std::invocable&lt;Functor, Args...&gt; &amp;&amp;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>                       std::convertible_to&lt;std::invoke_result_t&lt;Functor, Args...&gt;, Result&gt;;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>} <span class="comment">// namespace nitron</span></div>
+<div class="ttc" id="anamespacenitron_html"><div class="ttname"><a href="../../de/d94/namespacenitron.html">nitron</a></div><div class="ttdef"><b>Definition</b> Functor.hpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

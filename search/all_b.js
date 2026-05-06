@@ -7,6 +7,5 @@ var searchData=
   ['popfrontfield_4',['popfrontfield',['../dd/dfe/classnitron_1_1Record.html#ab3870ffa05ca621be9e488eef8829a11',1,'nitron::Record::popFrontField()'],['../d5/d58/classnitron_1_1Table.html#ad4e201df86a6f7b6f74c067ae0809740',1,'nitron::Table::popFrontField()']]],
   ['popfrontrecord_5',['popFrontRecord',['../d5/d58/classnitron_1_1Table.html#a4d64049aacd27bc08381b6ca43a155d4',1,'nitron::Table']]],
   ['promise_6',['promise',['../df/d00/classnitron_1_1Promise.html',1,'nitron::Promise&lt; ResultType &gt;'],['../df/d00/classnitron_1_1Promise.html#a91ded6c783c1300561c176569b9d67a1',1,'nitron::Promise::Promise()']]],
-  ['promise_2ehpp_7',['Promise.hpp',['../dd/df4/Promise_8hpp.html',1,'']]],
-  ['promise_2etpp_8',['Promise.tpp',['../d6/dee/Promise_8tpp.html',1,'']]]
+  ['promise_2ehpp_7',['Promise.hpp',['../dd/df4/Promise_8hpp.html',1,'']]]
 ];
