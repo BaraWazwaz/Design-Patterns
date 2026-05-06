@@ -1,37 +1,85 @@
 #include <iostream>
-#include "singleton.hpp"
+#include <sstream>
+#include "Table.hpp"
+#include "Promise.hpp"
+#include "tests/Spec.hpp"
 
-class MyClass
+void runTests()
 {
-public:
-    ~MyClass()
-    {
-        std::cout << "Object got deleted" << std::endl;
-    }
-    MyClass(const MyClass&) = delete;
-    MyClass& operator=(const MyClass&) = delete;
+    using nitron::Spec;
+    using nitron::Test;
+    using nitron::Record;
+    using nitron::Table;
+    using Promise = nitron::Promise<int>;
 
-    int& getData() { return data; }
-    void setData(int _data) { data = _data; }
-    operator int() { return data; }
+    Spec main ("Main");
+    
+    main
+    .openSubSpec("nitron::Table")
+        .addTest(Test::returnsValue<std::string>(
+            []() -> std::string {
+                Table table;
 
-private:
-    int data;
-    MyClass()
-    : data(0) 
-    {
-        std::cout << "Object got constructed" << std::endl;
-    }
-    friend nitron::Singleton<MyClass>;
-};
+                table.emplaceBackField<int>("id", 0);
+                table.emplaceBackField<std::string>("name", "Anonymous");
+                table.emplaceBackField<bool>("active", true);
 
-int main() 
+                Record record;
+                record.emplaceBackField<int>(1);
+                record.emplaceBackField<std::string>(std::string("Ahmad"));
+                record.emplaceBackField<bool>(true);
+                table.emplaceBackRecord(std::move(record));
+
+                std::stringstream str;
+                str << table;
+                return str.str();
+            },
+            [](std::string const& tableConent) -> bool {
+                return tableConent ==
+                "----------------------------------------------\n"
+                "|           id |         name |       active |\n"
+                "----------------------------------------------\n"
+                "|            1 |        Ahmad |            1 |\n"
+                "----------------------------------------------\n";
+            },
+            "nitron::Table can recieve records and output it correctly."
+        ))
+    .closeSubSpec()
+    .openSubSpec("nitron::Promise")
+        .addTest(Test::returnsValue<int>(
+            []() {
+                Promise p (std::plus<int>(), 4, 7);
+                return p.get();
+            },
+            [](long long const& x) { return x == 11; },
+            "nitron::Promise<long long> should resolve on get()"
+        ))
+        .addTest(Test::throwsValueOfType<std::runtime_error>(
+            []() {
+                Promise p ([](){
+                    throw std::runtime_error("Hello");
+                    return 0;
+                });
+                p.get();
+            },
+            "nitron::Promise<long long> should receive a thrown std::runtime_error on get()"
+        ))
+    .closeSubSpec();
+    
+    main.displayResult(std::cout);
+}
+
+int experimenting()
 {
-    std::cout << "Hello World" << std::endl;
-    typedef nitron::Singleton<MyClass> SingletonType;
-    MyClass& x = SingletonType::get();
-    std::cout << "Singleton value: " << x.getData() << std::endl;
-    x.setData(10);
-    std::cout << "Singleton value: " << x.getData() << std::endl;
+    return 0;
+}
+
+int main()
+{
+    int status = experimenting();
+    if (status != 0)
+        return status;
+    else
+        runTests();
     return 0;
 }

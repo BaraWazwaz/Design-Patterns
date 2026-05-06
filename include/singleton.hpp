@@ -1,65 +1,48 @@
 /**
- * @file
- * @brief Class that implements Design Pattern known as @ref Singleton.
+ * @file Singleton.hpp
+ * @brief implements the @ref Singleton class
+ * @copyright 2026 Bara Wazwaz. Released under the [GNU License](/.github/LICENSE)
  */
 #pragma once
+
 #include <concepts>
+#include <mutex>
 
 namespace nitron
 {
-    /**
-     * @brief Concept that makes sure the wrapper class is a proper Singleton.
-     * @tparam T Type to check compliance with Singleton properties
-     * @details a class has to be :
-     * - Not Default Constructable.
-     * - Not Copy Constructable.
-     * - Not Move Constructable.
-     * - Not Copy Assignable.
-     * - Not Move Assignable.
-     */
-    template <typename T>
-    concept ProperSingleton = !std::is_default_constructible_v<T> &&
-                              !std::is_copy_constructible_v<T> &&
-                              !std::is_move_constructible_v<T> &&
-                              !std::is_copy_assignable_v<T> &&
-                              !std::is_move_assignable_v<T>;
 
-    /**
-     * @brief Singleton class wrapper.
-     * @tparam T Type to be wrapped as Singleton,
-     *  a class has to be :
-     * - Not Default Constructable.
-     * - Not Copy Constructable.
-     * - Not Move Constructable.
-     * - Not Copy Assignable.
-     * - Not Move Assignable.
-     * @details @ref Singleton Design Pattern allows only one instance of class, 
-     * to limit and control access to the wrapped class's constructor.
-     * 
-     * More found at <https://refactoring.guru/design-patterns/singleton>.
-     */
-    template <typename T>
-    class Singleton
-    {
-    public:
-        using ValueType = T;    ///< Member Type to Access templated wrapped class.
+/// @brief a proper singleton should not be publically constructable or moved
+template <typename T>
+concept ProperSingleton = !std::is_default_constructible_v<T> &&
+                          !std::is_copy_constructible_v<T> &&
+                          !std::is_move_constructible_v<T> &&
+                          !std::is_copy_assignable_v<T> &&
+                          !std::is_move_assignable_v<T>;
 
-        static_assert(ProperSingleton<ValueType>, 
-                      "Wrapped type is NOT suitable to be a Singleton.");
+/// @brief Singleton wrapper for safe access of single instance classes
+/// @tparam ValueType needs to have a private or protected default constructor,
+///                   needs to have nitron::Singleton<T> as a friend
+template <typename ValueType>
+class Singleton
+{
+public:
+    /// - `first`  is the instance reference
+    /// - `second` is mutex lock guard object for thread safey
+    using AccessToken = std::pair<ValueType&, std::lock_guard<std::mutex>>;
 
-        Singleton()                            = delete;    ///< Pervent Default Construction.
-        Singleton(const Singleton&)            = delete;    ///< Prevent Copy Construction.
-        Singleton(Singleton&&)                 = delete;    ///< Prevent Move Construction.
-        Singleton& operator=(const Singleton&) = delete;    ///< Prevent Copy Assingment.
-        Singleton& operator=(Singleton&&)      = delete;    ///< Prevent Move Assingment.
-        
-        /**
-         * @brief Access to instance.
-         * @return a Reference to the instance.
-         */
-        static ValueType& get();
-    };
+    static_assert(ProperSingleton<ValueType>,
+                  "Wrapped type is NOT suitable to be a Singleton.");
+
+    Singleton()                            = delete;
+    Singleton(Singleton const&)            = delete;
+    Singleton(Singleton&&)                 = delete;
+    Singleton& operator=(Singleton const&) = delete;
+    Singleton& operator=(Singleton&&)      = delete;
     
+    /// @brief acquiring @ref AccessToken for instance
+    static AccessToken get();
+};
+
 } // namespace nitron
 
-#include "singleton.tpp"
+#include "Singleton.tpp"

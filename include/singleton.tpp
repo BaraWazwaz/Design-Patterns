@@ -1,16 +1,19 @@
-/**
- * @file
- * @brief Implementation of the @ref Singleton.hpp header for the @ref Singleton class.
- */
+#pragma once
 
-#include "singleton.hpp"
+#include "Singleton.hpp"
 
 namespace nitron
 {
-    template <typename T>
-    Singleton<T>::ValueType& Singleton<T>::get()
-    {
-        static ValueType value;
-        return value;
-    }
-} // namespace nitron
+
+template <typename ValueType>
+Singleton<ValueType>::AccessToken Singleton<ValueType>::get() {
+    static ValueType value;
+    static std::mutex mutex;
+    return AccessToken(
+        std::piecewise_construct,
+        std::forward_as_tuple(value),
+        std::forward_as_tuple(mutex)
+    );
+}
+
+}

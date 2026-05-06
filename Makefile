@@ -1,55 +1,55 @@
-# --- Windows Configuration ---
-# Force Make to use CMD.exe as the shell to avoid conflicts if sh.exe is in PATH
-SHELL    := cmd.exe
-TARGET   := bin/main.exe
+# --- Configuration ---
 CXX      := g++
-CXXFLAGS := -Wall -Wextra -std=c++23 -Iinclude
-SRC_DIR  := src
-OBJ_DIR  := build
-BIN_DIR  := bin
+CXXFLAGS := -Wall -Wextra -std=c++20 -Iinclude -MMD -MP
 
-# --- File Discovery ---
-# Use forward slashes for discovery (G++ understands them fine)
-SOURCES  := $(wildcard $(SRC_DIR)/*.cpp)
-OBJECTS  := $(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+# --- Project Structure ---
+BIN_DIR  := bin
+OBJ_DIR  := build
+SRC_DIR  := src
+INC_DIR  := include
+DOC_DIR  := doc
+
+TARGET   := $(BIN_DIR)/main.exe
+
+# --- Source discovery (recursive, Git Bash safe) ---
+SOURCES := $(shell find $(SRC_DIR) -type f -name "*.cpp")
+
+# Map src/... → build/...
+OBJECTS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SOURCES))
+DEPS    := $(OBJECTS:.o=.d)
 
 # --- Build Rules ---
+.PHONY: all clean run doc
 
 all: $(TARGET)
 
-# Link the executable
-$(TARGET): $(OBJECTS) | $(BIN_DIR)
-	$(CXX) $(OBJECTS) -o $(TARGET)
+# Link
+$(TARGET): $(OBJECTS)
+	mkdir -p $(BIN_DIR)
+	$(CXX) $(OBJECTS) -o $@
 
-# Compile .cpp to .o
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+# Compile
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Windows-specific directory creation
-$(BIN_DIR) $(OBJ_DIR):
-	@if not exist "$@" mkdir "$@"
+# Dependencies
+-include $(DEPS)
 
-# --- Utility Commands ---
+# --- Documentation ---
+doc: $(DOC_DIR)/output/index.html
 
-.PHONY: clean run
+$(DOC_DIR)/output/index.html: $(SOURCES) $(shell find $(INC_DIR) -name "*.hpp") $(DOC_DIR)/Doxyfile
+	@echo "Generating documentation..."
+	doxygen $(DOC_DIR)/Doxyfile
 
-# Windows 'del' needs backslashes to work properly
-clean:
-	@if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
-	@if exist $(BIN_DIR) rmdir /s /q $(BIN_DIR)
+$(DOC_DIR)/Doxyfile:
+	mkdir -p $(DOC_DIR)
+	doxygen -g $(DOC_DIR)/Doxyfile
 
+# --- Utility ---
 run: all
-	@.\$(TARGET)
+	./$(TARGET)
 
-docs/output/index.html: $(SOURCES) include/*.hpp docs/Doxyfile
-	@echo "Configure the docs/Doxyfile to your preferences..."
-	@pause
-	doxygen docs/Doxyfile
-
-docs/Doxyfile: docs
-	@doxygen -g docs/Doxyfile
-
-docs:
-	@mkdir docs
-
-doc: docs/output/index.html
+clean:
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
